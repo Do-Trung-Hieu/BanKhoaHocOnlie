@@ -1,25 +1,31 @@
 let express = require('express');
+let expressHbs = require('express-handlebars');
+const Handlebars = require('handlebars');
+let {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
+
 let app = express();
 
 app.use(express.static(__dirname + '/public'));
-let expressHbs = require('express-handlebars');
-let {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 
-let hbs = expressHbs.create({
+let helper = require('./controllers/helper');
+/*let hbs = expressHbs.create({
     extname: 'hbs',
     defaultLayout: 'layout',
     layoutsDir: __dirname + '/views/layouts/',
-    partialsDir: __dirname + '/views/partials/'
+    partialsDir: __dirname + '/views/partials/',
 });
-app.engine('hbs',hbs.engine);
-app.set('view engine','hbs');
-
-/* Thay cai nay */
-/*app.get('/', (req,res) => {
-    res.render('index');
-})*/
-
-/* Bang cai nay */
+app.engine('hbs',hbs.engine);*/
+app.engine('handlebars',expressHbs({
+    defaultLayout: 'layout',
+    layoutsDir: __dirname + '/views/layouts/',
+    partialsDir: __dirname + '/views/partials/',
+    helpers: {
+        createStarList: helper.createStarList,
+        createStars: helper.creatStars
+    },
+    handlebars: allowInsecurePrototypeAccess(Handlebars)
+}));
+app.set('view engine','handlebars');
 
 app.use('/',require('./routes/indexRouter'));
 app.use('/products',require('./routes/productRouter'));
@@ -36,7 +42,7 @@ app.get('/sync', (req,res) => {
 app.get('/:page', (req,res) => {
     let banners = {
         blog: 'Our Blog',
-        category: 'Category',
+        category: 'Shop Category',
         cart: 'Shopping Cart',
         single_product: "Product"
     };
