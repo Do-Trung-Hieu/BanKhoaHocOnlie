@@ -1,9 +1,13 @@
 let express = require('express');
 let expressHbs = require('express-handlebars');
+let bodyParser = require('body-parser');
 const Handlebars = require('handlebars');
 let {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 
 let app = express();
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
 
