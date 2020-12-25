@@ -3,23 +3,23 @@
 module.exports = {
     up: (queryInterface, Sequelize) => {
         let data = [
-            { name: 'Apple' },
-            { name: 'Asus' },
-            { name: 'Gionee' },
-            { name: 'Micromax' },
-            { name: 'Samsung' },
+            { name: 'IT' ,imagepath: ''},
+            { name: 'Ngoại Ngữ' ,imagepath: ''},
+            { name: 'Phần Mềm' , imagepath: ''},
+
+
         ];
         data.map(item => {
             item.createdAt = Sequelize.literal('NOW()');
             item.updatedAt = Sequelize.literal('NOW()');
             return item;
         });
-        return queryInterface.bulkInsert('Brands', data, {});
+        return queryInterface.bulkInsert('Categories', data, {});
     },
 
     down: (queryInterface, Sequelize) => {
 
-        return queryInterface.bulkDelete('Brands', null, {});
+        return queryInterface.bulkDelete('Categories', null, {});
 
     }
-};
+}; 
