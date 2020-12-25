@@ -11,6 +11,7 @@ router.get('/',(req,res,next)=>{
             return productController.getTrendingProducts();
         })
         .then(data=>{
+            console.log(data);
             res.locals.trendingProducts = data;
             res.render('index');
         })

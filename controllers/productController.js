@@ -10,11 +10,11 @@ controller.getTrendingProducts = ()=>{
         Product
             .findAll({
                 order:[
-                    ['overallReview','DESC']
+                    ['overallreview','DESC']
                 ],
                 limit:8,
-                include: [{model: models.Category}],
-                attributes: ['id','name','imagepath','price']
+                include: [{model: models.Topic}],
+                attributes: ['id','name','imagepath']
             })
             .then(data=>resolve(data))
             .catch(error=>reject(new Error(error)));
