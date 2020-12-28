@@ -6,25 +6,25 @@ module.exports = {
             { email: 'admin@gmail.com',
               password: '1234',
               fullname: 'admin',
-              imagepath: '',
+              imagepath: 'img/UAT/admin.jpg',
               isAdmin: '1'
             },
             { email: 'hieudo@gmail.com',
               password: '1234',
               fullname: 'Trung Hiếu',
-              imagepath: '',
+              imagepath: 'img/UAT/hieudo.jpg',
               isAdmin: '0'
             },
             { email: 'hieunguyen@gmail.com',
               password: '1234',
               fullname: 'Văn Hiếu',
-              imagepath: '',
+              imagepath: 'img/UAT/hieunguyen.jpg',
               isAdmin: '0'
             },
             { email: 'duclam@gmail.com',
               password: '1234',
               fullname: 'Thiên Đức',
-              imagepath: '',
+              imagepath: 'img/UAT/duclam.jpg',
               isAdmin: '0'
             },
 

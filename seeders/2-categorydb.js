@@ -3,9 +3,9 @@
 module.exports = {
     up: (queryInterface, Sequelize) => {
         let data = [
-            { name: 'IT' ,imagepath: '/img/category/it.jpg'},
-            { name: 'Ngoại Ngữ' ,imagepath: '/img/category/ngoaingu.jpg'},
-            { name: 'Photoshop' , imagepath: '/img/category/pts.jpg'},
+            { name: 'IT' ,imagepath: 'img/category/it.jpg'},
+            { name: 'Ngoại Ngữ' ,imagepath: 'img/category/nn.jpg'},
+            { name: 'Phần Mềm' , imagepath: 'img/category/pm.jpg'},
 
 
         ];
