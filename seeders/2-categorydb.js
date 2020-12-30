@@ -6,7 +6,7 @@ module.exports = {
             { name: 'IT' ,imagepath: 'img/category/it.jpg'},
             { name: 'Ngoại Ngữ' ,imagepath: 'img/category/nn.jpg'},
             { name: 'Phần Mềm' , imagepath: 'img/category/pm.jpg'},
-
+            { name: 'Kinh Doanh' , imagepath: 'img/category/kd.jpg'}
 
         ];
         data.map(item => {

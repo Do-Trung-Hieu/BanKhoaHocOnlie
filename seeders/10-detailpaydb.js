@@ -9,6 +9,8 @@ module.exports = {
             {   productId: 7, payId: 4 },
             {   productId: 2, payId: 5 },
             {   productId: 9, payId: 6 },
+            {   productId: 11, payId:7 },
+            {   productId:14, payId:8 },
 
 
         ];

@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.TEXT,
     price: DataTypes.DECIMAL,
     description: DataTypes.TEXT,
+    summary: DataTypes.TEXT,
     overallreview: DataTypes.DOUBLE,
     reviewCount: DataTypes.INTEGER,
     imagepath: DataTypes.TEXT,

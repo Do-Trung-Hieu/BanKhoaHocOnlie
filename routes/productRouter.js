@@ -1,23 +1,25 @@
 let express = require('express');
 let router = express.Router();
+const { Client } = require('pg');
+const db = require('../utils/db');
 
 router.get('/',(req,res,next)=>{
-    if((req.query.category == null) || isNaN(req.query.category)){
-        console.log(req.query.category);
-        req.query.category = 0;
-    }
-    if((req.query.brand == null) || isNaN(req.query.brand)){
-        req.query.brand = 0;
-    }
-    if((req.query.color == null) || isNaN(req.query.color)){
-        req.query.color = 0;
-    }
-    if((req.query.min == null) || isNaN(req.query.min)){
-        req.query.min = 0;
-    }
-    if((req.query.max == null) || isNaN(req.query.max)){
-        req.query.max = 100;
-    }
+    // if((req.query.category == null) || isNaN(req.query.category)){
+    //     console.log(req.query.category);
+    //     req.query.category = 0;
+    // }
+    // if((req.query.brand == null) || isNaN(req.query.brand)){
+    //     req.query.brand = 0;
+    // }
+    // if((req.query.color == null) || isNaN(req.query.color)){
+    //     req.query.color = 0;
+    // }
+    // if((req.query.min == null) || isNaN(req.query.min)){
+    //     req.query.min = 0;
+    // }
+    // if((req.query.max == null) || isNaN(req.query.max)){
+    //     req.query.max = 100;
+    // }
     let categoryController = require('../controllers/categoryController');
     categoryController  
         .getAll()

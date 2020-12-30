@@ -1,6 +1,7 @@
 let controller = {};
 let models = require('../models');
 let Product = models.Product;
+let Detailpay = models.Detailpay;
 let Sequelize = require('sequelize');
 let Op = Sequelize.Op;
 
@@ -14,11 +15,66 @@ controller.getTrendingProducts = ()=>{
                 ],
                 limit:8,
                 include: [{model: models.Topic}],
-                attributes: ['id','name','imagepath']
+                attributes: ['id','name','price','imagepath']
             })
             .then(data=>resolve(data))
             .catch(error=>reject(new Error(error)));
     });
+};
+
+controller.getBestSeller = () => {
+    return new Promise((resolve,reject)=>{
+        Detailpay
+            .findAll({
+                order: [
+                    [Sequelize.fn('COUNT',Sequelize.col('productId')),'DESC']
+                ],
+                group: ['Product.id','Product.name','productId'],
+                attributes: 
+                    [[Sequelize.fn('COUNT',Sequelize.col('productId')),'like_count']]
+                ,
+                include: [{
+                    model: Product,
+                    attributes: ['id','name','price','imagepath'],
+                    include: []
+                }]
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+        // Product
+        //     .findAll({
+        //         attributes: ['name','price','imagepath'],
+        //         include: [{
+        //             model: models.Detailpay,
+        //             order: [
+        //                 [[Sequelize.fn('COUNT',Sequelize.col('productId'))],'DESC']
+        //             ],
+        //             attributes: { 
+        //                 include: [[Sequelize.fn('COUNT',Sequelize.col('productId')),'like_count']]
+        //             }
+        //         }],
+        //         group: ['name','productId']
+        // })
+        //     .then(data =>resolve(data))
+        //     .catch(error=> reject(new Error(error)));
+    });
+};
+
+controller.getNewest = () => {
+    return new Promise((resolve,reject)=> {
+        Product
+            .findAll({
+                order: [ 
+                    ['createdAt' , 'DESC']
+                ],
+                attributes: ['name','price','imagepath'],
+                include: [],
+                limit : 10,
+
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
 };
 
 
@@ -60,7 +116,15 @@ controller.getById = (id) =>{
         Product
             .findOne({
                 where: { id : id},
-                include: [{model: models.Category}]
+                attributes: ['name','price','imagepath','description'],
+                include: [{
+                    model: models.Topic,
+                    attributes: ['name'],
+                    include: [{ 
+                        model: models.Category,
+                        attributes: ['name']
+                    }]
+                }]
             })
             .then(result =>{
                 product = result;
