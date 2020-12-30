@@ -12,7 +12,7 @@
                 <form action="#">
                   <ul>
                     {{#each categories}}
-                    <li class="filter-list"><input class="pixel-radio" type="radio" id="category{{id}}" name="category"><label for="category{{id}}" onclick="selectParam('category',{{id}},true)">{{name}}<span> ({{Products.length}})</span></label></li>
+                    <li class="filter-list"><input class="pixel-radio" type="radio" id="category{{id}}" name="category"><label for="category{{id}}" onclick="selectParam('category',{{id}},true)">{{name}} <!--<span> ({{Topics.length}})</span> --> </label></li>
                     {{/each}}
                   </ul>
                 </form>
@@ -20,18 +20,18 @@
             </ul>
           </div>
           <div class="sidebar-filter">
-            <div class="top-filter-head">Product Filters</div>
+            <div class="top-filter-head">Courses Filters</div>
             <div class="common-filter">
-              <div class="head">Brands</div>
+              <div class="head">Topics</div>
               <form action="#">
                 <ul>
-                  {{#each brands}}
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="brand{{id}}" name="brand" onclick="selectParam('brand',{{id}})"><label for="brand{{id}}">{{name}}<span>({{Products.length}})</span></label></li>
+                  {{#each topics}}
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="brand{{id}}" name="brand" onclick="selectParam('brand',{{id}})"><label for="brand{{id}}">{{name}}<!--<span> ({{Topics.length}})</span> --></label></li>
                   {{/each}}
                 </ul>
               </form>
             </div>
-            <div class="common-filter">
+            {{!-- <div class="common-filter">
               <div class="head">Color</div>
               <form action="#">
                 <ul>
@@ -40,7 +40,7 @@
                   {{/each}}
                 </ul>
               </form>
-            </div>
+            </div> --}}
             <div class="common-filter">
               <div class="head">Price</div>
               <div class="price-range-area">
@@ -116,7 +116,7 @@
 	<!-- ================ category section end ================= -->		  
 
 	<!-- ================ top product area start ================= -->	
-	<section class="related-product-area">
+	{{!-- <section class="related-product-area">
 		<div class="container">
 			<div class="section-intro pb-60px">
         <p>Popular Item in the market</p>
@@ -228,7 +228,7 @@
         </div>
       </div>
 		</div>
-	</section>
+	</section> --}}
 	<!-- ================ top product area end ================= -->		
 
 	<!-- ================ Subscribe section start ================= -->		  

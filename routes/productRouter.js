@@ -25,24 +25,26 @@ router.get('/',(req,res,next)=>{
         .getAll()
         .then(data =>{
             res.locals.categories = data;
-            let brandController = require('../controllers/brandController');
-            return brandController.getAll(req.query);
+            let topicController = require('../controllers/topicController');
+            return topicController.getAll(/*req.query*/);
         })
         .then(data=>{
-            res.locals.brands = data;
-            let colorController = require('../controllers/colorController');
-            return colorController.getAll(req.query);
-        })
-        .then(data=>{
-            res.locals.colors = data;
+            res.locals.topics = data;
+            /*let colorController = require('../controllers/colorController');
+            return colorController.getAll(req.query);*/
             let productController = require('../controllers/productController');
-            return productController.getAll(req.query);
-            
+            return productController.getAll(/*req.query*/); 
         })
         .then(data=>{
             res.locals.products = data;
-            res.render('category');
+            res.render('category')
+            /*let productController = require('../controllers/productController');
+            return productController.getAll(req.query); */
         })
+        /*.then(data=>{
+            res.locals.products = data;
+            res.render('category');
+        })*/
         .catch(error => next(error));
 })
 

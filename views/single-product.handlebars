@@ -24,23 +24,23 @@
 						<h3>{{name}}</h3>
 						<h2>{{price}}</h2>
 						<ul class="list">
-							<li><a class="active" href="#"><span>Category</span> : {{Category.name}}</a></li>
+							<li><a class="active" href="#"><span>Category</span> : {{Topic.Category.name}}</a></li>
 							<li><a href="#"><span>Topic</span> : {{Topic.name}}</a></li>
 						</ul>
-						<p>{{Description}}</p>
+						<p>{{summary}}</p>
 						<div class="product_count">
-              				<label for="qty">Quantity:</label>
-              				<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
+              				{{!-- <label for="qty">Quantity:</label> --}}
+              				{{!-- <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
 							 class="increase items-count" type="button"><i class="ti-angle-left"></i></button>
 							<input type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:" class="input-text qty">
 							<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
-               				class="reduced items-count" type="button"><i class="ti-angle-right"></i></button>
+               				class="reduced items-count" type="button"><i class="ti-angle-right"></i></button> --}}
 							<a class="button primary-btn" href="#">Add to Cart</a>               
 						</div>
-						<div class="card_area d-flex align-items-center">
+						{{!-- <div class="card_area d-flex align-items-center">
 							<a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
 							<a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
-						</div>
+						</div> --}}
 					</div>
 				</div>
 			</div>
@@ -55,10 +55,10 @@
 				<li class="nav-item">
 					<a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Description</a>
 				</li>
-				<li class="nav-item">
+				{{!-- <li class="nav-item">
 					<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
 					 aria-selected="false">Specification</a>
-				</li>
+				</li> --}}
 				<li class="nav-item">
 					<a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
 					 aria-selected="false">Comments</a>
@@ -72,7 +72,7 @@
 				<div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
 					<p>{{{description}}}</p>
 				</div>
-				<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+				{{!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 					<div class="table-responsive">
 						<table class="table">
 							<tbody>
@@ -89,7 +89,7 @@
 							</tbody>
 						</table>
 					</div>
-				</div>
+				</div> --}}
 				<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
 					<div class="row">
 						<div class="col-lg-6">
@@ -172,7 +172,7 @@
 								<div class="col-6">
 									<div class="rating_list">
 										<h3>Based on {{reviewCount}} Reviews</h3>
-										{{{createStarList stars}}}
+										{{!-- {{{createStarList stars}}} --}}
 									</div>
 								</div>
 							</div>

@@ -78,19 +78,19 @@ controller.getNewest = () => {
 };
 
 
-controller.getAll = (query)=>{
+controller.getAll = (/*query*/)=>{
     return new Promise((resolve,reject)=>{
         let options = {
-            include: [{model: models.Category}],
-            attributes: ['id','name','imagepath','price'],
-            where:{
+            //include: [{model: models.Category}],
+            attributes: ['id','name','price','imagepath'],
+            /*where:{
                 price: {
                     [Op.gte]: query.min,
                     [Op.lte]: query.max
                 }
-            }
+            }*/
         };
-        if(query.category > 0){
+        /*if(query.category > 0){
             options.where.categoryId = query.category;
         }
         if(query.brand > 0){
@@ -102,7 +102,7 @@ controller.getAll = (query)=>{
                 attributes: [],
                 where: {colorId: query.color}
             })
-        }
+        }*/
         Product
             .findAll(options)
             .then(data=>resolve(data))
@@ -116,7 +116,7 @@ controller.getById = (id) =>{
         Product
             .findOne({
                 where: { id : id},
-                attributes: ['name','price','imagepath','description'],
+                attributes: ['name','price','description','summary','imagepath'],
                 include: [{
                     model: models.Topic,
                     attributes: ['name'],
@@ -126,7 +126,8 @@ controller.getById = (id) =>{
                     }]
                 }]
             })
-            .then(result =>{
+            .then(data=>resolve(data))
+            /*.then(result =>{
                 product = result;
                 return models.ProductSpecification.findAll({
                     where: {productId: id},
@@ -164,7 +165,7 @@ controller.getById = (id) =>{
                 }
                 product.stars = stars;
                 resolve(product);
-            })
+            })*/
             .catch(error => reject(new Error(error)));
     });
 };

@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
 
-let helper = require('./controllers/helper');
+//let helper = require('./controllers/helper');
 /*let hbs = expressHbs.create({
     extname: 'hbs',
     defaultLayout: 'layout',
@@ -23,10 +23,10 @@ app.engine('handlebars',expressHbs({
     defaultLayout: 'layout',
     layoutsDir: __dirname + '/views/layouts/',
     partialsDir: __dirname + '/views/partials/',
-    helpers: {
+    /*helpers: {
         createStarList: helper.createStarList,
         createStars: helper.creatStars
-    },
+    },*/
     handlebars: allowInsecurePrototypeAccess(Handlebars)
 }));
 app.set('view engine','handlebars');
