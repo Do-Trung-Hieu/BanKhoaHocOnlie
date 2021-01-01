@@ -12,7 +12,7 @@
                 <form action="#">
                   <ul>
                     {{#each categories}}
-                    <li class="filter-list"><input class="pixel-radio" type="radio" id="category{{id}}" name="category"><label for="category{{id}}" onclick="selectParam('category',{{id}},true)">{{name}} <!--<span> ({{Topics.length}})</span> --> </label></li>
+                    <li class="filter-list"><input class="pixel-radio" type="radio" id="category{{id}}" name="category"><label for="category{{id}}" onclick="selectParam('category',{{id}},true)">{{name}} <span> ({{Products.length}})</span>  </label></li>
                     {{/each}}
                   </ul>
                 </form>
@@ -26,7 +26,7 @@
               <form action="#">
                 <ul>
                   {{#each topics}}
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="brand{{id}}" name="brand" onclick="selectParam('brand',{{id}})"><label for="brand{{id}}">{{name}}<!--<span> ({{Topics.length}})</span> --></label></li>
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="topic{{id}}" name="topic" onclick="selectParam('topic',{{id}})"><label for="topic{{id}}">{{name}} <span> ({{Products.length}})</span> </label></li>
                   {{/each}}
                 </ul>
               </form>
@@ -101,7 +101,7 @@
                   <div class="card-body">
                     <p>{{Category.name}}</p>
                     <h4 class="card-product__title"><a href="/products/{{id}}">{{name}}</a></h4>
-                    <p class="card-product__price">{{price}}</p>
+                    <p class="card-product__price">${{price}}</p>
                   </div>
                 </div>
               </div>
@@ -257,24 +257,22 @@
 	<!-- ================ Subscribe section end ================= -->		  
 
   <script>
-    /*Them*/
+
     let urlParams = new URLSearchParams(location.search);
     let params = {
       category: 0,
-      brand: 0,
-      color: 0,
+      topic: 0,
       min: 0,
       max: 100
     };
+
     for(let key in params){
       if(!urlParams.has(key)){
         urlParams.append(key,params[key]);
       }
     }
-    /*Them*/
 
-
-
+    console.log(urlParams.toString());
 
     for(let key in params){
       let control = $(`#${key}${urlParams.get(key)}`);
@@ -283,10 +281,7 @@
       }
     }
 
-
-
     function selectParam(key,value,reset=false){
-      /*Them*/
       if(reset){
         for(let key in params){
           urlParams.set(key,params[key]);
@@ -294,7 +289,6 @@
       }
       urlParams.set(key,value);
       let url = `/products?${urlParams.toString()}`;
-      //let url = `/products?${key}=${value}`;
       location.href=url;  
     }
   </script>

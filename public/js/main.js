@@ -14,7 +14,7 @@ $(function() {
     items:3,
     margin: 10,
     autoplay:true,
-    autoplayTimeout: 1500,
+    autoplayTimeout: 2000,
     loop:true,
     nav:false,
     dots:true,

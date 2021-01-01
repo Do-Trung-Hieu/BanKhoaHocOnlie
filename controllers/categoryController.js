@@ -9,9 +9,9 @@ controller.getAll = ()=>{
             .findAll({
                 attributes: ['id','name','imagepath'],
                 include: [{
-                    model: models.Topic,
-                    attributes: ['id']/*,
-                    include: [{ 
+                    model: models.Product,
+                    attributes: ['id']
+                    /*include: [{ 
                         model: models.Product,
                         attributes: ['id']
                     }]*/

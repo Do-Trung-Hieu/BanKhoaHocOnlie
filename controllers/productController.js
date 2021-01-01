@@ -78,25 +78,25 @@ controller.getNewest = () => {
 };
 
 
-controller.getAll = (/*query*/)=>{
+controller.getAll = (query)=>{
     return new Promise((resolve,reject)=>{
         let options = {
-            //include: [{model: models.Category}],
+            include: [{model: models.Category}],
             attributes: ['id','name','price','imagepath'],
-            /*where:{
+            where:{
                 price: {
                     [Op.gte]: query.min,
                     [Op.lte]: query.max
                 }
-            }*/
+            }
         };
-        /*if(query.category > 0){
+        if(query.category > 0){
             options.where.categoryId = query.category;
         }
-        if(query.brand > 0){
-            options.where.brandId = query.brand;
+        if(query.topic > 0){
+            options.where.topicId = query.topic;
         }
-        if(query.color > 0){
+        /*if(query.color > 0){
             options.include.push({
                 model:models.ProductColor,
                 attributes: [],

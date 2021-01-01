@@ -4,11 +4,11 @@ let Topic = models.Topic;
 let Sequelize = require('sequelize');
 let Op = Sequelize.Op;
 
-controller.getAll = (/*query*/)=>{
+controller.getAll = (query)=>{
     return new Promise((resolve,reject)=>{
         let options = {
             attributes: ['id','name'],
-            /*include: [{
+            include: [{
                 model: models.Product,
                 attributes: ['id'],
                 where: {
@@ -17,12 +17,12 @@ controller.getAll = (/*query*/)=>{
                         [Op.lte]: query.max
                     }
                 }
-            }]*/
+            }]
         };
-        /*if(query.category> 0){
+        if(query.category> 0){
             options.include[0].where.categoryId = query.category;
         }
-        if(query.color > 0){
+        /*if(query.color > 0){
             options.include[0].include = [{
                 model: models.ProductColor,
                 attributes:[],
