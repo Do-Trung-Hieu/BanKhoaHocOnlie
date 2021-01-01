@@ -93,16 +93,35 @@ controller.getAll = (query)=>{
         if(query.category > 0){
             options.where.categoryId = query.category;
         }
+        if(query.search != ''){
+            options.where.name = {
+                [Op.iLike]: `%${query.search}%`
+            }
+        }
         if(query.topic > 0){
             options.where.topicId = query.topic;
         }
-        /*if(query.color > 0){
-            options.include.push({
-                model:models.ProductColor,
-                attributes: [],
-                where: {colorId: query.color}
-            })
-        }*/
+        if(query.limit > 0){
+            options.limit = query.limit;
+            // Lấy từ
+            options.offset = query.limit * (query.page - 1);
+        }
+        if(query.sort){
+            switch(query.sort){
+                case 'name':
+                    options.order = [['name','ASC']];
+                    break;
+                case 'price':
+                    options.order = [['price','ASC']];
+                    break;
+                case 'overallreview':
+                    options.order = [['overallreview','DESC']];
+                    break;
+                default:
+                    options.order = [['name','ASC']];
+                    break;
+            }
+        }
         Product
             .findAll(options)
             .then(data=>resolve(data))
