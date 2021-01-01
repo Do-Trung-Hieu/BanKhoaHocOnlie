@@ -98,7 +98,7 @@
 								<div class="review_item">
 									<div class="media">
 										<div class="d-flex">
-											<img src="{{User.avatarPath}}" alt="">
+											<img src="{{User.imagepath}}" alt="">
 										</div>
 										<div class="media-body">
 											<h4>{{User.fullname}}</h4>
@@ -112,7 +112,7 @@
 								<div class="review_item reply">
 									<div class="media">
 										<div class="d-flex">
-											<img src="{{User.avatarPath}}" alt="">
+											<img src="{{User.imagepath}}" alt="">
 										</div>
 										<div class="media-body">
 											<h4>{{User.fullname}}</h4>
@@ -165,14 +165,14 @@
 								<div class="col-6">
 									<div class="box_total">
 										<h5>Overall</h5>
-										<h4>{{overallReview}}</h4>
-										<h6>({{reviewCount}})</h6>
+										<h4>{{overallreview}}</h4>
+										<h6>({{reviewCount}} Reviews)</h6>
 									</div>
 								</div>
 								<div class="col-6">
 									<div class="rating_list">
 										<h3>Based on {{reviewCount}} Reviews</h3>
-										{{!-- {{{createStarList stars}}} --}}
+										{{{createStarList stars}}}
 									</div>
 								</div>
 							</div>
@@ -181,7 +181,7 @@
 								<div class="review_item">
 									<div class="media">
 										<div class="d-flex">
-											<img src="{{User.avatarPath}}" alt="">
+											<img src="{{User.imagepath}}" alt="">
 										</div>
 										<div class="media-body">
 											<h4>{{User.fullname}}</h4>

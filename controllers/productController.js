@@ -116,7 +116,7 @@ controller.getById = (id) =>{
         Product
             .findOne({
                 where: { id : id},
-                attributes: ['name','price','description','summary','imagepath'],
+                attributes: ['name','price','description','summary','overallreview','reviewCount','imagepath'],
                 include: [{
                     model: models.Topic,
                     attributes: ['name'],
@@ -126,7 +126,39 @@ controller.getById = (id) =>{
                     }]
                 }]
             })
-            .then(data=>resolve(data))
+            .then(result => {
+                console.log(result);
+                product = result;
+                return models.Comment.findAll({
+                    where: {productId: id, parentCommentId:null},
+                    include: [
+                        {
+                            model: models.User
+                        },
+                        // Lấy thêm comment con
+                        {
+                            model:models.Comment,
+                            as:'SubComments',
+                            include:[{model:models.User}]
+                        }]
+                }); 
+            })
+            .then(comments => {
+                product.Comments = comments;
+                return models.Review.findAll({
+                    where:{productId:id},
+                    include:[{model: models.User}]
+                });
+            })
+            .then(reviews => {
+                product.Reviews = reviews;
+                let stars = [];
+                for(let i = 1; i<=5; i++){
+                    stars.push(reviews.filter(item => (item.rating==i)).length);
+                }
+                product.stars = stars;
+                resolve(product);   
+            })
             /*.then(result =>{
                 product = result;
                 return models.ProductSpecification.findAll({
@@ -148,8 +180,8 @@ controller.getById = (id) =>{
                             include:[{model:models.User}]
                         }]
                 });
-            })
-            .then(comments => {
+            })*/
+            /*.then(comments => {
                 product.Comments = comments;
                 return models.Review.findAll({
                     where:{productId:id},

@@ -16,10 +16,10 @@ helper.createStarList = (stars) =>{
     return str; 
 };
 
-helper.creatStars = (star) => {
+helper.creatStars = (rating) => {
     let str = '';
     let i;
-    for(i=1;i<=star;i++){
+    for(i=1;i<=rating;i++){
         str += '<i class="fa fa-star"></i>';
     }
     for(;i<=5;i++){

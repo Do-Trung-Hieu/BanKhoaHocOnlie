@@ -1,5 +1,6 @@
+/*Đổi màu star review của user*/
 .review_item .media .media-body i.disabled,
-
+/*Đổi màu danh sách star review*/
 .product_description_area .tab-content .total_rate .rating_list .list li a i.disabled {
     color: lightgray;
 }
