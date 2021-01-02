@@ -12,8 +12,8 @@ module.exports = {
                 categoryId: 1,
                 teacherId: 2,
                 topicId: 1,
-                overallreview: 3.5,
-                reviewCount: 2
+                overallreview: 0,
+                reviewCount: 0
              },
             { name: 'Lập trình IOS',
                 price: '26.48',
@@ -24,8 +24,8 @@ module.exports = {
                 categoryId: 1,
                 teacherId: 2,
                 topicId: 1,
-                overallreview: 4,
-                reviewCount: 2
+                overallreview: 0,
+                reviewCount: 0
              },
             // ---------------------------------------------------------------------------------------------------
             { name: 'CSS',
@@ -37,8 +37,8 @@ module.exports = {
                 categoryId: 1,
                 teacherId: 4,
                 topicId: 2,
-                overallreview: 3,
-                reviewCount: 4
+                overallreview: 5,
+                reviewCount: 3
              },
             { name: 'HTML',
                 price: '5.99',
@@ -49,8 +49,8 @@ module.exports = {
                 categoryId: 1,
                 teacherId: 4,
                 topicId: 2,
-                overallreview: 5,
-                reviewCount: 1
+                overallreview: 0,
+                reviewCount: 0
              },
              // ---------------------------------------------------------------------------------------------------
              { name: 'C++',
@@ -62,8 +62,8 @@ module.exports = {
                 categoryId: 1,
                 teacherId: 2,
                 topicId: 3,
-                overallreview: 2,
-                reviewCount: 4
+                overallreview: 0,
+                reviewCount: 0
              },
              { name: 'Java',
                 price: '9.99',
@@ -74,8 +74,8 @@ module.exports = {
                 categoryId: 1,
                 teacherId: 2,
                 topicId: 3,
-                overallreview: 3,
-                reviewCount: 1
+                overallreview: 0,
+                reviewCount: 0
              },
              { name: 'Latex',
                 price: '20.99',
@@ -86,8 +86,8 @@ module.exports = {
                 categoryId: 1,
                 teacherId: 5,
                 topicId: 3,
-                overallreview: 3.5,
-                reviewCount: 2
+                overallreview: 0,
+                reviewCount: 0
              },
              { name: 'Python',
                 price: '35.55',
@@ -98,8 +98,8 @@ module.exports = {
                 categoryId: 1,
                 teacherId: 2,
                 topicId: 3,
-                overallreview: 4,
-                reviewCount: 4
+                overallreview: 0,
+                reviewCount: 0
              },
              // ---------------------------------------------------------------------------------------------------
             { name: 'Ngữ pháp cơ bản',
@@ -111,8 +111,8 @@ module.exports = {
                 categoryId: 2,
                 teacherId: 1,
                 topicId: 4,
-                overallreview: 4,
-                reviewCount: 1
+                overallreview: 0,
+                reviewCount: 0
              },
             { name: 'Tiếng Anh giao tiếp cơ bản',
                 price: '12.99',
@@ -123,8 +123,8 @@ module.exports = {
                 teacherId: 1,
                 categoryId: 2,
                 topicId: 4,
-                overallreview: 3.5,
-                reviewCount: 2
+                overallreview: 0,
+                reviewCount: 0
              },
              // ---------------------------------------------------------------------------------------------------
             { name: 'Tiếng Hàn giao tiếp',
@@ -136,8 +136,8 @@ module.exports = {
                 categoryId: 2,
                 teacherId: 1,
                 topicId: 5,
-                overallreview: 5,
-                reviewCount: 1
+                overallreview: 0,
+                reviewCount: 0
              },
              // ---------------------------------------------------------------------------------------------------
             { name: 'Tiếng Trung giao tiếp cấp tốc',
@@ -149,8 +149,8 @@ module.exports = {
                 categoryId: 2,
                 teacherId: 1,
                 topicId: 6,
-                overallreview: 4.5,
-                reviewCount: 2
+                overallreview: 0,
+                reviewCount: 0
              },
              // ---------------------------------------------------------------------------------------------------
             { name: 'Học xoá vật thế trong Photoshop',
@@ -162,8 +162,8 @@ module.exports = {
                 categoryId: 3,
                 teacherId: 5,
                 topicId: 7,
-                overallreview: 3.5,
-                reviewCount: 6
+                overallreview: 0,
+                reviewCount: 0
              },
             { name: 'Khoá học Photoshop cấp tốc',
                 price: '30.12',
@@ -174,8 +174,8 @@ module.exports = {
                 categoryId: 3,
                 teacherId: 5,
                 topicId: 7,
-                overallreview: 4.2,
-                reviewCount: 5
+                overallreview: 0,
+                reviewCount: 0
              },
              // ---------------------------------------------------------------------------------------------------
             { name: 'Học chuyển cảnh trong Premiere Pro',
@@ -187,8 +187,8 @@ module.exports = {
                 categoryId: 3,
                 teacherId: 5,
                 topicId: 8,
-                overallreview: 2.5,
-                reviewCount: 4
+                overallreview: 0,
+                reviewCount: 0
              },
             { name: 'Khoá học cấp tốc trong Premiere Pro',
                 price: '32.78',
@@ -199,8 +199,8 @@ module.exports = {
                 categoryId: 3,
                 teacherId: 5,
                 topicId: 8,
-                overallreview: 4,
-                reviewCount: 2
+                overallreview: 0,
+                reviewCount: 0
              },
              // ---------------------------------------------------------------------------------------------------
              { name: 'Kinh doanh online cơ bản',
@@ -212,8 +212,8 @@ module.exports = {
                 categoryId: 4,
                 teacherId: 3,
                 topicId: 9,
-                overallreview: 5,
-                reviewCount: 2
+                overallreview: 0,
+                reviewCount: 0
              },
              // ---------------------------------------------------------------------------------------------------
              { name: 'Digital Marketing',
@@ -225,8 +225,8 @@ module.exports = {
                 categoryId: 4,
                 teacherId: 3,
                 topicId: 10,
-                overallreview: 4,
-                reviewCount: 3
+                overallreview: 0,
+                reviewCount: 0
              },
              { name: 'Khoá học marketing cơ bản',
                 price: '16.64',
@@ -237,8 +237,8 @@ module.exports = {
                 categoryId: 4,
                 teacherId: 3,
                 topicId: 10,
-                overallreview: 4,
-                reviewCount: 2.5
+                overallreview: 0,
+                reviewCount: 0
              },
              { name: 'Online marketing',
                 price: '50.99',
@@ -249,8 +249,8 @@ module.exports = {
                 categoryId: 4,
                 teacherId: 3,
                 topicId: 10,
-                overallreview: 3,
-                reviewCount: 5
+                overallreview: 0,
+                reviewCount: 0
              },
         ];
         data.map(item => {

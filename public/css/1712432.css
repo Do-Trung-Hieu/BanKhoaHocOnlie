@@ -1,3 +1,8 @@
+.review_box #starList a {
+    color: #fbd600;
+}
+/*Đổi màu khi chọn star để đánh giá*/
+.review_box i.disabled,
 /*Đổi màu star review của user*/
 .review_item .media .media-body i.disabled,
 /*Đổi màu danh sách star review*/

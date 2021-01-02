@@ -1,181 +1,121 @@
-let express = require("express");
+let express = require('express');
+let router = express.Router();
+let userController = require('../controllers/userController');
 
-let router = express();
-const db = require("../utils/db");
-const { Client } = require("pg");
-const path = require("path");
-const upload = require("../Middleware/uploadMiddleware");
-const Resize = require("../models/Resize");
-const { isNull } = require("util");
-const { array } = require("../Middleware/uploadMiddleware");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
-const passport = require('passport')
-const userlogin = require("../controllers/islogin");
+router.get('/login',(req,res,next) => {
+    req.session.returnURL = req.query.returnURL;
+    res.render('login');
+});
 
-router.get('/auth/facebook', passport.authenticate('facebook'));
+router.post('/login',(req,res,next) => {
+    let email = req.body.email;
+    let password = req.body.password;
+    let keepLoggedIn = (req.body.keepLoggedIn != undefined);
 
-router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), function (req, res) {
-        console.log(req.authInfo)
-        const client = new Client(db);
-        client.connect();
-        const usernameid = req.user.id
-        const hoten = req.user.displayName
-        const image = `https://graph.facebook.com/${req.user.id}/picture?width=200&height=200&access_token=${req.authInfo}`
-        const queryktuser = {
-            text: "SELECT * FROM users where usernameid=$1::text",
-            values: [usernameid],
-        };
-        const insertuser = {
-            text:
-                "INSERT INTO USERS(usernameid,ten,sokhoahochoanthanh,lockuser,isadmin,imagepath) VALUES ($1::text,$2::text,0,false,false,$3::text)",
-            values: [usernameid, hoten, image],
-        };
-        client.query(queryktuser, (err, result) => {
-            if (err) {
-                console.error(err.stack);
-            } else {
-                if (result.rowCount === 0) {
+    if(email == '' || password == ''){
+        return res.render('register',{
+            message: 'Please fill out the form !',   
+            type: 'alert-danger'
+        });
+    }
 
-                    client.query(insertuser);
-                    req.session.isAdmin = false;
-                    req.session.user = usernameid;
-                    req.session.fullname = hoten;
-                    res.redirect("/");
-                } else {
-                    if (result.rows[0].lockuser) {
-                        res.render("login", {
-                            message: "Tài khoản đã bị khoá",
-                            type: "aler-danger",
-                        });
-                    } else {
-                        console.log(result.rows);
-                        req.session.user = usernameid;
-                        req.session.isAdmin = result.rows[0].isadmin;
-                        req.session.fullname = result.rows[0].ten;
-                        if (result.rows[0].isadmin) {
-                            res.redirect("/admin");
-                        } else {
-                            res.redirect("/");
-                        }
+    userController
+        .getUserByEmail(email)
+        .then(user => {
+            if(user){
+                if (userController.comparePassword(password,user.password)){
+                    req.session.cookie.maxAge = keepLoggedIn ? 30*24*60*60*1000 : null;
+                    req.session.user = user;
+                    if(req.session.returnURL){
+                        res.redirect(req.session.returnURL);
+                    } else{
+                        res.redirect('/');
                     }
+                    
+                } else{
+                    res.render('login',{
+                        message: 'Incorrect password!',
+                        type: 'alert-danger'
+                    });
                 }
-
+            } 
+            else{
+                res.render('login',{
+                    message: 'Email does not exists!',
+                    type: 'alert-danger'
+                });
             }
         });
-    });
-router.get("/login", userlogin.kt_page_login_registe, (req, res) => {
-    res.render("login");
 });
-router.post("/login", userlogin.kt_page_login_registe, (req, res) => {
-    const client = new Client(db);
-    client.connect();
-    let usernameid = req.body.username;
-    let pass = req.body.pass;
 
-    const query = {
-        name: "get-name",
-        text: "SELECT * from users where usernameid = $1::text",
-        values: [usernameid],
-        rowMode: "json",
-    };
-    client.query(query, (err, result) => {
-        if (err) {
-            console.error(err.stack);
-        } else {
-            if (result.rowCount === 0) {
-                res.render("login", {
-                    message: "Sai tài khoản",
-                    type: "aler-danger",
+router.get('/register',(req,res,next) => {
+    res.render('register');
+});
+
+router.post('/register',(req,res,next) => {
+    let fullname = req.body.fullname;
+    let email = req.body.email;
+    let password = req.body.password;
+    let confirmPassword = req.body.confirmPassword;
+    let keepLoggedIn = (req.body.keepLoggedIn != undefined);
+
+    
+    if(fullname == '' || email == '' || password == '' || confirmPassword == ''){
+        return res.render('register',{
+            message: 'Please fill out the form !',   
+            type: 'alert-danger'
+        });
+    }
+
+    //kiem tra confirm password va password giong nhau
+    if(password != confirmPassword){
+        return res.render('register',{
+            message: 'Confirm password does not match !',   
+            type: 'alert-danger'
+        });
+    }
+    // kiem tra username chua ton tai
+    userController
+        .getUserByEmail(email)
+        .then (user => {
+            if(user){
+                return res.render('register',{
+                    message: `Email ${email} exists ! Please choose another email address`,
+                    type: 'alert-danger'
                 });
-            } else {
-                console.log(bcrypt.compareSync(pass, result.rows[0].matkhau));
-                if (!bcrypt.compareSync(pass, result.rows[0].matkhau)) {
-                    res.render("login", {
-                        message: "Sai mật khẩu",
-                        type: "aler-danger",
-                    });
-                } else {
-                    if (result.rows[0].lockuser) {
-                        res.render("login", {
-                            message: "Tài khoản đã bị khoá",
-                            type: "aler-danger",
-                        });
-                    } else {
-                        console.log(result.rows);
-                        req.session.fullname = result.rows[0].ten;
-                        req.session.username = usernameid;
-                        req.session.user = usernameid;
-                        req.session.isAdmin = result.rows[0].isadmin;
-                        if (result.rows[0].isadmin) {
-                            res.redirect("/admin");
-                        } else {
-                            res.redirect("/");
-                        }
-                    }
-                }
             }
-        }
-    });
+             // tao tai khoan
+             user = {
+                 fullname,
+                 email: email,
+                 password
+             }
+            return userController
+                .createUser(user)
+                .then(user => {
+                    if(keepLoggedIn){
+                        //req.session.cookie.maxAge = 30*24*60*60*1000;
+                        req.session.user = user;
+                        res.redirect('/');
+                    }
+                    else{
+                        res.render('login',{
+                            message: 'You have registered, now please login ! ',
+                            type: 'alert-primary'
+                        });
+                    }  
+                });
+        })
+        .catch(error => next (error));
 });
-router.get("/logout", (req, res, next) => {
-    req.session.destroy((error) => {
-        if (error) {
+
+router.get('/logout',(req,res,next) => {
+    req.session.destroy(error => {
+        if(error){
             return next(error);
-        }
-        return res.redirect("/login");
+        } 
+        return res.redirect('/users/login');
     });
 });
-router.get("/register", userlogin.kt_page_login_registe, (req, res) => {
-    res.render("register");
-});
-router.post("/register", upload.single("image"), userlogin.kt_page_login_registe, async function (req, res) {
-    // folder upload
-    const imagePath = path.join(__dirname, "../public/img");
-    // call class Resize
-    const fileUpload = new Resize(imagePath);
-    if (!req.file) {
-        return res.send(
-            `<script>confirm("Vui lòng thêm 1 hình ảnh"); history.back();</script>`
-        );
-    }
 
-    const filename = await fileUpload.save(req.file.buffer);
-    const image = "/img/" + filename;
-    const usernameid = req.body.username;
-    const gmail = req.body.gmail;
-    const password = req.body.password;
-    const confirm_password = req.body.confirmPassword;
-    const hoten = req.body.hoten;
-
-    const client = new Client(db);
-    await client.connect();
-    console.log(req.body);
-
-    const queryktuser = {
-        text: "SELECT usernameid FROM users where usernameid=$1::text",
-        values: [usernameid],
-    };
-    const ktuser = await client.query(queryktuser);
-
-    if (ktuser.rowCount === 1) {
-        return res.send(
-            `<script>confirm("Tài Khoản đã sử dụng"); history.back();</script>`
-        );
-    }
-    if (password != confirm_password) {
-        return res.send(
-            `<script>confirm("Vui lòng kiểm tra lại mật khẩu"); history.back();</script>`
-        );
-    }
-    const hashedPassword = bcrypt.hashSync(password, saltRounds);
-    const query = {
-        text:
-            "INSERT INTO USERS VALUES ($1::text,$2::text,$3::text,0,$4::text,false,false,$5::text)",
-        values: [usernameid, hashedPassword, hoten, gmail, image],
-    };
-    await client.query(query);
-    client.end();
-    res.redirect("/login");
-});
 module.exports = router;
