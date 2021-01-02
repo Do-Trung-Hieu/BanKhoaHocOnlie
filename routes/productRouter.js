@@ -6,7 +6,6 @@ const db = require('../utils/db');
 
 router.get('/',(req,res,next)=>{
     if((req.query.category == null) || isNaN(req.query.category)){
-        console.log(req.query.category);
         req.query.category = 0;
     }
     if((req.query.topic == null) || isNaN(req.query.topic)){

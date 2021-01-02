@@ -82,7 +82,7 @@ controller.getAll = (query)=>{
     return new Promise((resolve,reject)=>{
         let options = {
             include: [{model: models.Category}],
-            attributes: ['id','name','price','imagepath'],
+            attributes: ['id','name','price','imagepath','categoryId'],
             where:{
                 price: {
                     [Op.gte]: query.min,
@@ -135,7 +135,7 @@ controller.getById = (id) =>{
         Product
             .findOne({
                 where: { id : id},
-                attributes: ['name','price','description','summary','overallreview','reviewCount','imagepath'],
+                attributes: ['id','name','price','description','summary','overallreview','reviewCount','imagepath'],
                 include: [{
                     model: models.Topic,
                     attributes: ['name'],
@@ -146,7 +146,6 @@ controller.getById = (id) =>{
                 }]
             })
             .then(result => {
-                console.log(result);
                 product = result;
                 return models.Comment.findAll({
                     where: {productId: id, parentCommentId:null},

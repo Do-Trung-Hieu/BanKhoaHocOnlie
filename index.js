@@ -1,6 +1,8 @@
 let express = require('express');
 let expressHbs = require('express-handlebars');
 let bodyParser = require('body-parser');
+let cookieParser = require('cookie-parser');
+let session = require('express-session');
 const Handlebars = require('handlebars');
 let {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 
@@ -33,8 +35,33 @@ app.engine('handlebars',expressHbs({
 }));
 app.set('view engine','handlebars');
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(cookieParser());
+
+app.use(session({
+    cookie:{httpOnly: true, maxAge: 30*24*60*60*1000},
+    secret: 'S3cret',
+    resave: false,
+    saveUninitialized: false
+}));
+
+let Cart = require('./controllers/cartController');
+app.use((req,res,next)=>{
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    req.session.cart = cart;
+    // hiển thị số lượng trên giỏ hàng
+    res.locals.totalQuantity = cart.totalQuantity;
+
+    /*res.locals.fullname = req.session.user ? req.session.user.fullname : '';
+    res.locals.isLoggedIn = req.session.user ? true : false;*/
+    next();
+});
+
 app.use('/',require('./routes/indexRouter'));
 app.use('/products',require('./routes/productRouter'));
+app.use('/cart',require('./routes/cartRouter'));
 
 app.get('/sync', (req,res) => {
     let models = require('./models');
