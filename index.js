@@ -12,6 +12,7 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 
 let helper = require('./controllers/helper');
+let paginateHelper = require('express-handlebars-paginate');
 /*let hbs = expressHbs.create({
     extname: 'hbs',
     defaultLayout: 'layout',
@@ -25,7 +26,8 @@ app.engine('handlebars',expressHbs({
     partialsDir: __dirname + '/views/partials/',
     helpers: {
         createStarList: helper.createStarList,
-        createStars: helper.creatStars
+        createStars: helper.creatStars,
+        createPagination: paginateHelper.createPagination
     },
     handlebars: allowInsecurePrototypeAccess(Handlebars)
 }));

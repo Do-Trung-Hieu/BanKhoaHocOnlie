@@ -111,6 +111,11 @@
               </div>
               {{/each}}
             </div>
+            <div class="row justify-content-center">
+            <nav aria-label="Page navigation example" id="pagination">
+            {{{createPagination pagination paginationClass="pagination"}}}
+            </nav>
+            </div>
           </section>
           <!-- End Best Seller -->
         </div>
@@ -280,17 +285,31 @@
       }
     }
 
-    let checkboxes = ['category', 'topic']
-    for(let key of checkboxes){
-      let control = $(`#${key}${urlParams.get(key)}`);
-      if(control){
-        $(control).prop('checked',true);
+    $(document).ready(() => {
+      let checkboxes = ['category', 'topic'];
+      for(let key of checkboxes){
+        let control = $(`#${key}${urlParams.get(key)}`);
+        if(control){
+          $(control).prop('checked',true);
+        }
       }
-    }
-
-    //Giữ giá trị
-    $('#sort').val(urlParams.get('sort'));
-    $('#limit').val(urlParams.get('limit'));
+      //Giữ giá trị đã chọn
+      $('#sort').val(urlParams.get('sort'));
+      $('#limit').val(urlParams.get('limit'));
+      //Chỉnh giao diện thanh phân trang
+      $('#pagination li').addClass('page-item');
+      $('#pagination li a').addClass('page-link');
+      //Giữ đường dẫn
+      let savePage = urlParams.get('page');
+      $('#pagination li a').each((index,item)=>{
+        //href = .../products?page=2 => lấy ra được 2
+        let page = $(item).attr('href').split('=')[1];
+        urlParams.set('page',page);
+        let href = '/products?'+urlParams.toString();
+        $(item).attr('href', href);
+      });
+      urlParams.set('page',savePage);
+    });
 
     function selectParam(key,value,reset=false){
       if(reset){
