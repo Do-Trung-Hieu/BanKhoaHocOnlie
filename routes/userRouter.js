@@ -1,6 +1,34 @@
 let express = require('express');
 let router = express.Router();
 let userController = require('../controllers/userController');
+let multer = require('multer');
+let path = require('path');
+
+const storage = multer.diskStorage({
+    destination: './public/img/users/',
+    filename: function(req,file,cb){
+        cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    fileFilter: function(req,file,cb){
+        checkFileType(file,cb);
+    }
+}).single('avatar');
+
+function checkFileType(file,cb){
+    const filetypes = /jpeg|jpg|png|gif/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+    if(mimetype && extname){
+        return cb(null,true);
+    }else{
+        cb('Error: Images Only !');
+    }
+}
+
 
 router.get('/login',(req,res,next) => {
     req.session.returnURL = req.query.returnURL;
@@ -115,6 +143,79 @@ router.get('/logout',(req,res,next) => {
             return next(error);
         } 
         return res.redirect('/users/login');
+    });
+});
+
+router.get('/change-password',userController.isLoggedIn,(req,res,next) => {
+    res.render('change-password');
+});
+
+router.post('/change-password',userController.isLoggedIn,(req,res,next) => {
+    let oldpassword = req.body.oldpassword;
+    let newpassword = req.body.newpassword;
+    let confirmnewpassword = req.body.confirmnewpassword;
+
+    if(oldpassword == '' || newpassword == '' || confirmnewpassword == ''){
+        return res.render('change-password',{
+            message: 'Please fill out the form !',   
+            type: 'alert-danger'
+        });
+    }
+
+    if(newpassword != confirmnewpassword){
+        return res.render('change-password',{
+            message: 'Confirm new password does not match !',   
+            type: 'alert-danger'
+        });
+    }
+
+    userController.getUserByEmail(req.session.user.email)
+        .then(user => {
+            if (userController.comparePassword(oldpassword,user.password)){
+                userController.updatePassword(user,newpassword);
+                res.render('change-password',{
+                    message: 'Change password successful !',
+                    type: 'alert-primary'
+                });
+            }
+            else{
+                res.render('change-password',{
+                    message: 'Incorrect password!',
+                    type: 'alert-danger'
+                });
+            }
+        })
+        .catch(error => next (error));
+        
+});
+
+router.get('/upload-avatar',userController.isLoggedIn,(req,res,next) => {
+    res.render('upload-avatar');
+});
+
+router.post('/upload-avatar',userController.isLoggedIn,(req,res,next) => {
+    upload(req,res,err => {
+        if(err){
+            return res.render('upload-avatar',{
+                message: err,   
+                type: 'alert-danger'
+            });
+        }
+        else{
+            if(req.file == undefined){
+                res.render('upload-avatar',{
+                    message: 'Error: No file selected !',   
+                    type: 'alert-danger'
+                });
+            }
+            else{
+                userController.updateavatar(req.session.user.id,req.file.filename);
+                res.render('upload-avatar',{
+                    message: 'Upload Avatar is successfull !',   
+                    type: 'alert-primary'
+                });
+            }
+        }
     });
 });
 

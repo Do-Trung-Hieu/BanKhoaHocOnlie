@@ -3,8 +3,21 @@ let expressHbs = require('express-handlebars');
 let bodyParser = require('body-parser');
 let cookieParser = require('cookie-parser');
 let session = require('express-session');
+let multer = require('multer');
+let path = require('path');
 const Handlebars = require('handlebars');
 let {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
+
+const storage = multer.diskStorage({
+    destination: './public/img/users/',
+    filename: function(req,file,cb){
+        cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage
+}).single('avatar');
 
 let app = express();
 
