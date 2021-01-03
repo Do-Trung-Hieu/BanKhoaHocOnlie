@@ -7,25 +7,33 @@ module.exports = {
               password: '1234',
               fullname: 'admin',
               imagepath: '/img/users/admin.jpg',
-              isAdmin: '1'
+              isAdmin: '1',
+              secrettoken: '',
+              active: true
             },
             { email: 'hieudo@gmail.com',
               password: '1234',
               fullname: 'Trung Hiếu',
               imagepath: '/img/users/hieudo.jpg',
-              isAdmin: '0'
+              isAdmin: '0',
+              secrettoken: '',
+              active: true
             },
             { email: 'hieunguyen@gmail.com',
               password: '1234',
               fullname: 'Văn Hiếu',
               imagepath: '/img/users/hieunguyen.jpg',
-              isAdmin: '0'
+              isAdmin: '0',
+              secrettoken: '',
+              active: true
             },
             { email: 'duclam@gmail.com',
               password: '1234',
               fullname: 'Thiên Đức',
               imagepath: '/img/users/duclam.jpg',
-              isAdmin: '0'
+              isAdmin: '0',
+              secrettoken: '',
+              active: true
             },
 
 

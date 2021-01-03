@@ -3,21 +3,8 @@ let expressHbs = require('express-handlebars');
 let bodyParser = require('body-parser');
 let cookieParser = require('cookie-parser');
 let session = require('express-session');
-let multer = require('multer');
-let path = require('path');
 const Handlebars = require('handlebars');
 let {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
-
-const storage = multer.diskStorage({
-    destination: './public/img/users/',
-    filename: function(req,file,cb){
-        cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({
-    storage: storage
-}).single('avatar');
 
 let app = express();
 
@@ -85,16 +72,16 @@ app.get('/sync', (req,res) => {
 
 });
 
-app.get('/:page', (req,res) => {
-    let banners = {
-        blog: 'Our Blog',
-        category: 'Shop Category',
-        cart: 'Shopping Cart',
-        single_product: "Product"
-    };
-    let page = req.params.page;
-    res.render(page,{banner: banners[page]});
-})
+// app.get('/:page', (req,res) => {
+//     let banners = {
+//         blog: 'Our Blog',
+//         category: 'Shop Category',
+//         cart: 'Shopping Cart',
+//         single_product: "Product"
+//     };
+//     let page = req.params.page;
+//     res.render(page,{banner: banners[page]});
+// })
 
 app.set('port',process.env.PORT || 5000);
 app.listen(app.get('port'),() => {

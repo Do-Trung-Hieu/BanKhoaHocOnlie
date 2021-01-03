@@ -31,15 +31,16 @@
           <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
             <ul class="nav navbar-nav menu_nav ml-auto mr-auto">
               <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
-              <li class="nav-item active"><a class="nav-link" href="/products">Shop</a></li>
               <li class="nav-item submenu dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                  aria-expanded="false">Blog</a>
+                <a href="/products" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                    aria-expanded="false">Shop</a>
                 <ul class="dropdown-menu">
-                  <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>
-                  <li class="nav-item"><a class="nav-link" href="/single-blog">Blog Details</a></li>
+                  {{#each categories}}
+                  <li class="nav-item active"><a class="nav-link" href="/products?category={{id}}">{{name}}</a></li>
+                  {{/each}}
                 </ul>
-							</li>
+              </li>
+              {{!-- <li class="nav-item active"><a class="nav-link" href="/products">Shop</a></li> --}}
 							<li class="nav-item submenu dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                   aria-expanded="false">Pages</a>
@@ -54,19 +55,18 @@
                   <li class="nav-item"><a class="nav-link" href="/tracking-order">Tracking</a></li>
                 </ul>
               </li>
-              <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
               {{#if isLoggedIn}}
               <li class="nav-item submenu dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                   aria-expanded="false">Welcome {{fullname}}</a>
                 <ul class="dropdown-menu">
+                  <li class="nav-item"><a class="nav-link" href="/users/upload-avatar">Change Avatar</a></li>
                   <li class="nav-item"><a class="nav-link" href="/users/change-password">Change Password</a></li>
                   <li class="nav-item"><a class="nav-link" href="/users/logout">Logout</a></li>
                   </ul>
               </li>
               {{else}}
               <li class="nav-item"><a class="nav-link" href="/users/login">Login</a></li>
-              <li class="nav-item"><a class="nav-link" href="/users/upload-avatar">Avatar</a></li>
               {{/if}}
             </ul>
 

@@ -9,11 +9,32 @@ controller.getUserByEmail = (email) => {
     });
 };
 
+controller.getUserBySecrettoken = (secrettoken) => {
+    return User.findOne({
+        where: {secrettoken: secrettoken}
+    });
+};
+
+controller.updateSecrettoken = (user) => {
+    return User.update(
+        {
+            secrettoken: '',
+            active: true
+        },
+        {
+            where: {
+                id: user.id
+            }
+        }
+    );
+};
+
 controller.createUser = (user) => {
     var salt = bcryptjs.genSaltSync(10);
     user.password = bcryptjs.hashSync(user.password, salt);
     user.imagepath = "/img/users/none.jpg";
     user.isAdmin = false;
+    user.active = false;
     return User.create(user);
 }
 

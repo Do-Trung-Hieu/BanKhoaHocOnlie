@@ -3,31 +3,32 @@ let router = express.Router();
 let userController = require('../controllers/userController');
 let multer = require('multer');
 let path = require('path');
+let sharp = require('sharp');
+let nodemailer = require('nodemailer');
+let randomstring = require('randomstring');
 
-const storage = multer.diskStorage({
-    destination: './public/img/users/',
-    filename: function(req,file,cb){
-        cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+const option = {
+    service: 'gmail',
+    auth: {
+        user: '20c86hcmus@gmail.com',
+        pass: 'strapitest2021'
     }
-});
+};
 
+const storage = multer.memoryStorage();
 const upload = multer({
     storage: storage,
     fileFilter: function(req,file,cb){
-        checkFileType(file,cb);
+        const filetypes = /jpeg|jpg|png|gif/;
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = filetypes.test(file.mimetype);
+        if(mimetype && extname){
+            return cb(null,true);
+        }else{
+            return cb('Error: Images Only !');
+        }
     }
-}).single('avatar');
-
-function checkFileType(file,cb){
-    const filetypes = /jpeg|jpg|png|gif/;
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
-    if(mimetype && extname){
-        return cb(null,true);
-    }else{
-        cb('Error: Images Only !');
-    }
-}
+});
 
 
 router.get('/login',(req,res,next) => {
@@ -51,20 +52,28 @@ router.post('/login',(req,res,next) => {
         .getUserByEmail(email)
         .then(user => {
             if(user){
-                if (userController.comparePassword(password,user.password)){
-                    req.session.cookie.maxAge = keepLoggedIn ? 30*24*60*60*1000 : null;
-                    req.session.user = user;
-                    if(req.session.returnURL){
-                        res.redirect(req.session.returnURL);
-                    } else{
-                        res.redirect('/');
-                    }
-                    
-                } else{
+                if(user.active === false){
                     res.render('login',{
-                        message: 'Incorrect password!',
+                        message: 'Please activate your account !',
                         type: 'alert-danger'
                     });
+                }
+                else{
+                    if (userController.comparePassword(password,user.password)){
+                        req.session.cookie.maxAge = keepLoggedIn ? 30*24*60*60*1000 : null;
+                        req.session.user = user;
+                        if(req.session.returnURL){
+                            res.redirect(req.session.returnURL);
+                        } else{
+                            res.redirect('/');
+                        }
+                        
+                    } else{
+                        res.render('login',{
+                            message: 'Incorrect password!',
+                            type: 'alert-danger'
+                        });
+                    }
                 }
             } 
             else{
@@ -112,11 +121,37 @@ router.post('/register',(req,res,next) => {
                     type: 'alert-danger'
                 });
             }
+            const secretToken = randomstring.generate();
+            var transporter = nodemailer.createTransport(option);
+            transporter.verify(function(error,success){
+                if(error){
+                    console.log(error);
+                }
+                else{
+                    console.log('Ket noi thanh cong !');
+                    const link = "http://localhost:5000/users/verify?id="+secretToken;
+                    var mail = {
+                        from: '20c86hcmus@gmail.com',
+                        to: email,
+                        subject: 'Email Verify',
+                        html: "Hello,<br> Please Click on the link to verify your email.</br><a href="+link+"> Click here to verify</a>"
+                    };
+                    transporter.sendMail(mail,function(error,info){
+                        if(error){
+                            console.log(error);
+                        }
+                        else{
+                            console.log('Email da duoc gui: ' + info.response);
+                        }
+                    });
+                }
+            });
              // tao tai khoan
              user = {
+                 email,
+                 password,
                  fullname,
-                 email: email,
-                 password
+                 secrettoken: secretToken,
              }
             return userController
                 .createUser(user)
@@ -128,13 +163,34 @@ router.post('/register',(req,res,next) => {
                     }
                     else{
                         res.render('login',{
-                            message: 'You have registered, now please login ! ',
+                            message: 'You have registered, now please active your email account ! ',
                             type: 'alert-primary'
                         });
                     }  
                 });
         })
         .catch(error => next (error));
+});
+
+router.get('/verify',(req,res,next) => {
+    userController.getUserBySecrettoken(req.query.id)
+        .then(user => {
+            if(user === null){
+                return res.render('verify',{
+                    message: 'Email activation failed',
+                    type: 'alert-danger'
+                });
+            }
+            else{
+                userController.updateSecrettoken(user)
+                return res.render('verify',{
+                    message: 'Email was activated successfully',
+                    type: 'alert-primary'
+                });
+            }
+        })
+        .catch()
+    
 });
 
 router.get('/logout',(req,res,next) => {
@@ -193,30 +249,26 @@ router.get('/upload-avatar',userController.isLoggedIn,(req,res,next) => {
     res.render('upload-avatar');
 });
 
-router.post('/upload-avatar',userController.isLoggedIn,(req,res,next) => {
-    upload(req,res,err => {
-        if(err){
-            return res.render('upload-avatar',{
-                message: err,   
-                type: 'alert-danger'
-            });
-        }
-        else{
-            if(req.file == undefined){
-                res.render('upload-avatar',{
-                    message: 'Error: No file selected !',   
-                    type: 'alert-danger'
-                });
-            }
-            else{
-                userController.updateavatar(req.session.user.id,req.file.filename);
-                res.render('upload-avatar',{
-                    message: 'Upload Avatar is successfull !',   
-                    type: 'alert-primary'
-                });
-            }
-        }
-    });
+router.post('/upload-avatar',userController.isLoggedIn,upload.single('avatar'), (req,res) => {
+
+    if(req.file == undefined){
+        res.render('upload-avatar',{
+            message: 'Error: No file selected !',   
+            type: 'alert-danger'
+        });
+    }
+    else{
+        filename = `${Date.now()}-${req.file.originalname}`;
+        console.log(filename);
+        sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/users/${filename}`);
+        userController.updateavatar(req.session.user.id,filename);
+        res.render('upload-avatar',{
+            message: 'Upload Avatar is successfull !',   
+            type: 'alert-primary'
+        });
+    }
+    
+    
 });
 
 module.exports = router;
