@@ -1,7 +1,7 @@
 let controller = {};
 let models = require('../models');
 let Product = models.Product;
-let Detailpay = models.Detailpay;
+let Pay = models.Pay;
 let Sequelize = require('sequelize');
 let Op = Sequelize.Op;
 
@@ -24,7 +24,7 @@ controller.getTrendingProducts = ()=>{
 
 controller.getBestSeller = () => {
     return new Promise((resolve,reject)=>{
-        Detailpay
+        Pay
             .findAll({
                 order: [
                     [Sequelize.fn('COUNT',Sequelize.col('productId')),'DESC']
