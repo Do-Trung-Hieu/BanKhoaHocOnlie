@@ -1,7 +1,10 @@
 let controller = {};
 let models = require('../models');
 let User = models.User;
+let Pay = models.Pay;
 let bcryptjs = require('bcryptjs');
+let Sequelize = require('sequelize');
+let Op = Sequelize.Op;
 
 controller.getUserByEmail = (email) => {
     return User.findOne({
@@ -74,5 +77,96 @@ controller.isLoggedIn = (req,res,next)=>{
         res.redirect(`/users/login?returnURL=${req.originalUrl}`);
     }
 }
+
+controller.getInfoAll = () => {
+    return new Promise((resolve,reject)=>{
+        User
+            .findAll({
+                // group: ['userId','User.id'],
+                // attributes: [[Sequelize.fn('COUNT',Sequelize.col('userId')),'sokhoahoc']],
+                // include: [{
+                //     model: User,
+                //     where: { 
+                //         isAdmin: 'false'
+                //     },
+                //     attributes: ['email','password','fullname','imagepath'],
+                //     include: [],
+                //     required: false,
+                //     right: true
+                // }]
+                where: {
+                    isAdmin: false
+                },
+                attributes: ['email','password','fullname','imagepath']
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+};
+
+controller.getInfoDetail= (email) =>{
+    return new Promise((resolve,reject)=>{
+        User
+            .findOne({
+                where: { 
+                    email: email
+                },
+                attributes: ['email','password','fullname','imagepath']
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+}
+
+controller.getByEmail = (email) =>{
+    return new Promise((resolve,reject)=>{
+        User
+            .findOne({
+                where: { email: email},
+                attributes: ['email','password','fullname','imagepath']
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+}
+
+controller.insertUser = (email,password,hoten,imagepath) =>{
+    // var salt = bcryptjs.genSaltSync(10);
+    // password1 = bcryptjs.hashSync(password, salt);
+    return new Promise((resolve,reject)=>{
+        User
+            .create({ email: email,password:bcryptjs.hashSync(password, bcryptjs.genSaltSync(10)),fullname:hoten,imagepath:imagepath,isAdmin:false,active:true})
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+}
+
+controller.updateUser = (email,hoten) =>{
+    console.log(email,hoten);
+    return new Promise((resolve,reject)=>{
+        User
+            .update({
+                fullname: hoten,
+            },
+            {
+                where: {
+                    email:email
+                }
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+}
+
+controller.deleteUser = (email) =>{
+    return new Promise((resolve,reject)=>{
+        User
+            .destroy({
+                where: { email : email}
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+};
 
 module.exports = controller;

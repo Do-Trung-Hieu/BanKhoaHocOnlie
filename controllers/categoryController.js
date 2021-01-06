@@ -11,7 +11,8 @@ controller.getAll = (query)=>{
             attributes: ['id','name','imagepath'],
             include: [{
                 model: models.Product,
-                where: {}
+                where: {},
+                required: false
             }]
         };
         if(query && query.search != ''){

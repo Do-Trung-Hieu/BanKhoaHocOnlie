@@ -5,7 +5,7 @@ let cookieParser = require('cookie-parser');
 let session = require('express-session');
 const Handlebars = require('handlebars');
 let {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
-
+var path = require('path');
 let app = express();
 
 app.use(express.static(__dirname + '/public'));
@@ -53,8 +53,18 @@ app.use((req,res,next)=>{
 
     res.locals.fullname = req.session.user ? req.session.user.fullname : '';
     res.locals.isLoggedIn = req.session.user ? true : false;
+    res.locals.isLoggedIn2 = req.session.teacher ? true : false;
+    res.locals.isAdmin = req.session.isAdmin ? true : false;
+    res.locals.isTeacher = req.session.isTeacher ? true : false;
     next();
 });
+
+// ---------------------- ADMIN -------------------------------------------
+app.use(express.static(path.join(__dirname, '/public')));
+var AdminRouter = require('./routes/adminRouter')
+app.use('/admin', AdminRouter);
+
+// ----------------------END ADMIN ----------------------------------------
 
 app.use('/',require('./routes/indexRouter'));
 app.use('/products',require('./routes/productRouter'));
@@ -63,6 +73,7 @@ app.use('/comments',require('./routes/commentRouter'));
 app.use('/reviews',require('./routes/reviewRouter'));
 app.use('/users',require('./routes/userRouter'));
 app.use('/pays',require('./routes/payRouter'));
+app.use('/teacher', require('./routes/teacherRouter'));
 
 app.get('/sync', (req,res) => {
     let models = require('./models');

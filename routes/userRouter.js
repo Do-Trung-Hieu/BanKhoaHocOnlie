@@ -62,10 +62,16 @@ router.post('/login',(req,res,next) => {
                     if (userController.comparePassword(password,user.password)){
                         req.session.cookie.maxAge = keepLoggedIn ? 30*24*60*60*1000 : null;
                         req.session.user = user;
+                        req.session.isAdmin = user.isAdmin;
                         if(req.session.returnURL){
                             res.redirect(req.session.returnURL);
                         } else{
-                            res.redirect('/');
+                            if(req.session.isAdmin){
+                                res.redirect('/admin');
+                            }
+                            else{
+                                res.redirect('/');
+                            }
                         }
                         
                     } else{

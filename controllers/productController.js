@@ -41,22 +41,6 @@ controller.getBestSeller = () => {
             })
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
-        // Product
-        //     .findAll({
-        //         attributes: ['name','price','imagepath'],
-        //         include: [{
-        //             model: models.Detailpay,
-        //             order: [
-        //                 [[Sequelize.fn('COUNT',Sequelize.col('productId'))],'DESC']
-        //             ],
-        //             attributes: { 
-        //                 include: [[Sequelize.fn('COUNT',Sequelize.col('productId')),'like_count']]
-        //             }
-        //         }],
-        //         group: ['name','productId']
-        // })
-        //     .then(data =>resolve(data))
-        //     .catch(error=> reject(new Error(error)));
     });
 };
 
