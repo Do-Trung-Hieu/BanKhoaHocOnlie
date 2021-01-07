@@ -6,7 +6,7 @@ let path = require('path');
 let sharp = require('sharp');
 let nodemailer = require('nodemailer');
 let randomstring = require('randomstring');
-
+let admin = require('../controllers/islogin');
 const option = {
     service: 'gmail',
     auth: {
@@ -276,5 +276,67 @@ router.post('/upload-avatar',userController.isLoggedIn,upload.single('avatar'), 
     
     
 });
+// ------------------------- PROFILE USER ------------------------------------------------------
+router.get('/profile' ,userController.isLoggedIn,(req,res,next) =>{
+    
+    let pro = require('../controllers/userController');
+    pro
+        .getByEmail(req.session.user.email)
+        .then(data => {
+            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',data)
+            res.locals.userss = data;
+            res.render('admin/profileuser', {layout: '../admin/layouts/userlayout.handlebars'});
+        })
+        .catch( error => next(error));
+})
 
+router.get('/purchased',userController.isLoggedIn, (req,res,next) => {
+    let get = require('../controllers/userController');
+    get 
+        .getPayById(req.session.user.id)
+        .then(data =>{
+            if(data){
+                res.locals.khoahoc = data;
+                res.render('admin/CourseOfUser', { layout: '../admin/layouts/userlayout.handlebars'});
+            }
+            else{
+                res.locals.khoahoc = null;
+                res.render('admin/CourseOfUser', { layout: '../admin/layouts/userlayout.handlebars'});
+            }
+
+        })
+        .catch( error => next(error));
+    
+})
+
+router.post('/edit',userController.isLoggedIn,upload.single('image'),(req,res,next)=>{
+    let hoten = req.body.hoten;
+    if(req.file){
+        filename = `${Date.now()}-${req.file.originalname}`;
+        console.log(filename);
+        sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/users/${filename}`);
+        let image = "/img/users/" + filename;
+        let edit = require('../controllers/userController');
+        edit
+            .updateUserImage(req.session.user.email,hoten,image)
+            .then(data =>{
+                res.send(
+                    `<script>confirm("Cập nhật thành công"); window.location="/users/profile";</script>`
+                )
+            })
+            .catch(error => next(error));
+    }
+    else{
+        let edit = require('../controllers/userController');
+        edit
+            .updateUser(req.session.user.email,hoten)
+            .then(data =>{
+                res.send(
+                    `<script>confirm("Cập nhật thành công"); window.location="/users/profile";</script>`
+                )
+            })
+            .catch(error => next(error));
+    }
+    
+})
 module.exports = router;

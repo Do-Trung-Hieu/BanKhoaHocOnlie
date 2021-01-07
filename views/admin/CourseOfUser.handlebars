@@ -1,0 +1,46 @@
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-plain table-plain-bg">
+                    <div class="card-header ">
+                        <h4 class="card-title">KHOÁ HỌC ĐÃ MUA</h4>
+                        <p class="card-category">Here is a subtitle for this table</p>
+                    </div>
+                    
+                    <div class="card-body table-full-width table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <th></th>
+                                <th>Tên khoá học</th>
+                                <th>Giá đã mua</th>
+                                <th>Giáo viên</th>
+                            </thead>
+                            <tbody>
+                                {{#if khoahoc}}
+                                    {{#each khoahoc}}
+                                        <tr>
+                                            <td width="15%"> <a href="/products/{{Product.id}}/productchild"><img
+                                                        src="{{Product.imagepath}}" width="70" height="70"></a> </td>
+                                            <td width="35%"><a href="/products/{{Product.id}}/productchild">{{Product.name}}</a></td>
+                                            <td width="15%"><a href="/products/{{Product.id}}/productchild">${{Product.price}}</a></td>
+                                            <td width="45%"><a href="/products/{{Product.id}}/productchild">{{Product.Teacher.fullname}}</a></td>
+                                            <td>
+                                                
+
+                                    <div class="text-center">
+                                    </div>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                {{else}}
+                                    <h2> Bạn chưa mua khoá học nào</h2>
+                                {{/if}}
+                            </tbody>
+                        </table>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

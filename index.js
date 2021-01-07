@@ -9,7 +9,6 @@ var path = require('path');
 let app = express();
 require('express-async-errors');
 
-
 app.use(express.static(__dirname + '/public'));
 
 let helper = require('./controllers/helper');
@@ -90,7 +89,7 @@ app.use(function (req, res) {
     res.render('404', {
       layout: false
     })
-  });
+});
 
 // app.get('/:page', (req,res) => {
 //     let banners = {

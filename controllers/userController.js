@@ -67,7 +67,7 @@ controller.updateavatar = (id,filename)=>{
             id: id
         }
     });
-}
+};
 
 controller.isLoggedIn = (req,res,next)=>{
     if(req.session.user){
@@ -76,7 +76,7 @@ controller.isLoggedIn = (req,res,next)=>{
     else{
         res.redirect(`/users/login?returnURL=${req.originalUrl}`);
     }
-}
+};
 
 controller.getInfoAll = () => {
     return new Promise((resolve,reject)=>{
@@ -116,7 +116,7 @@ controller.getInfoDetail= (email) =>{
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
     })
-}
+};
 
 controller.getByEmail = (email) =>{
     return new Promise((resolve,reject)=>{
@@ -128,7 +128,7 @@ controller.getByEmail = (email) =>{
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
     })
-}
+};
 
 controller.insertUser = (email,password,hoten,imagepath) =>{
     // var salt = bcryptjs.genSaltSync(10);
@@ -139,7 +139,7 @@ controller.insertUser = (email,password,hoten,imagepath) =>{
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
     })
-}
+};
 
 controller.updateUser = (email,hoten) =>{
     console.log(email,hoten);
@@ -156,7 +156,25 @@ controller.updateUser = (email,hoten) =>{
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
     })
-}
+};
+
+controller.updateUserImage = (email,hoten,image) =>{
+    console.log(email,hoten);
+    return new Promise((resolve,reject)=>{
+        User
+            .update({
+                fullname: hoten,
+                imagepath: image,
+            },
+            {
+                where: {
+                    email:email
+                }
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+};
 
 controller.deleteUser = (email) =>{
     return new Promise((resolve,reject)=>{
@@ -169,4 +187,13 @@ controller.deleteUser = (email) =>{
     })
 };
 
+controller.getPayById = (id) => {
+    return Pay.findAll({
+        include: {
+            model: models.Product,
+            include: { model: models.Teacher }
+        },
+        where: { userId: id}
+    })
+};
 module.exports = controller;

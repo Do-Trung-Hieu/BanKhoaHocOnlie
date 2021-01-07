@@ -2,6 +2,7 @@ let controller = {};
 let models = require('../models');
 let Product = models.Product;
 let Pay = models.Pay;
+let ProductChild = models.Productchild;
 let Sequelize = require('sequelize');
 let Op = Sequelize.Op;
 
@@ -170,4 +171,16 @@ controller.getById = (id) =>{
     });
 };
 
+controller.getDetailCourse = (id) =>{
+    return ProductChild.findAll({
+        where: { productId: id}
+    })
+};
+
+controller.getProbyId = (id) =>{
+    return ProductChild.findOne({
+        include: {model: models.Product},
+        where: {id: id}
+    })
+}
 module.exports = controller;

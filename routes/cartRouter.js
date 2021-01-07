@@ -31,8 +31,8 @@ router.post('/',(req,res,next)=>{
                 .getById(productId)
                 .then(product => {
                     var cartItem = req.session.cart.add(product,productId,quantity);
-                    //console.log("aaaaaaaaa",req.session.cart.items[productId].item.id);
                     cartItem.sc =  null;
+                    //console.log("aaaaaaaaa",req.session.cart.items[productId].item.id);
                     res.json(cartItem);
                 })
                 .catch(error=>next(error));

@@ -11,7 +11,6 @@ const { resolve } = require('path');
 const { rejects } = require('assert');
 let op = Sequelize.Op;
 
-
 controller.getAll = () =>{
     return new Promise((resolve,reject)=>{
         Teacher

@@ -3,7 +3,6 @@ let express = require('express');
 let router = express.Router();
 const { Client } = require('pg');
 
-
 router.get('/',(req,res,next)=>{
     if((req.query.category == null) || isNaN(req.query.category)){
         req.query.category = 0;
@@ -80,6 +79,32 @@ router.get('/:id',(req,res,next)=>{
         })
         .catch(error => next(error));
     
+})
+
+router.get('/:id/productchild',(req,res,next)=>{
+    let get = require('../controllers/productController');
+    get
+        .getDetailCourse(req.params.id)
+        .then(data =>{
+            res.locals.detailcourse = data;
+            res.render('admin/DetailOfCourse', { layout: '../admin/layouts/userlayout.handlebars'});
+        })
+})
+
+router.get('/productchild/video/:id',(req,res,next)=>{
+    let pro = require('../controllers/productController');
+    pro
+        .getProbyId(req.params.id)
+        .then(data =>{
+            res.locals.productde = data;
+            let get = require('../controllers/productController');
+            return get.getDetailCourse(data.productId);
+        })
+        .then(data =>{
+            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',data)
+            res.locals.listproduct = data;
+            res.render('video');
+        })
 })
 
 module.exports = router;

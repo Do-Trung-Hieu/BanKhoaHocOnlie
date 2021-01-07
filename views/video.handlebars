@@ -1,0 +1,52 @@
+{{#with productde}}
+	<div class="product_image_area">
+		<div class="container">
+			<div class="row s_product_inner">
+				<div class="col-lg-6">
+					<div class="owl-carousel owl-theme s_Product_carousel">
+						<div class="single-prd-item">
+							{{!-- <img class="img-fluid" src="{{imagepath" alt=""> --}}
+                            
+                            <video width="600" controls>
+                                <source src='{{ProductChild.clip}}' type='video/mp4'>
+                            </video>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-5 offset-lg-1">
+					<div class="s_product_text">
+						<h3>Tên môn học: {{Product.name}}</h3>
+						<h3>Giảng viên: </h3>
+					</div>
+				</div>
+			</div>
+		
+			<div data-purpose="course-curriculum">
+				<h2 class="udlite-heading-xl curriculum--header--1d_Nv" data-purpose="curriculum-header">Các bài giảng:</h2>
+			</div>
+			<div>
+				<div class="section--panel--1tqxC section--first-panel--2fbBU panel--panel--3NYBX">
+					<ol>
+                        {{#each ../listproduct}}
+						<li>
+							<div class="udlite-block-list-item-content section--row--3PNBT udlite-btn udlite-btn-large udlite-btn-link udlite-text-sm section--item-title--2k1DQ">
+								<p></p><a href="/products/productchild/video/{{id}}">{{name}}</a></p>
+							</div>
+						</li>
+                        {{/each}}
+						{{!-- <li>
+							<div class="udlite-block-list-item-content section--row--3PNBT udlite-btn udlite-btn-large udlite-btn-link udlite-text-sm section--item-title--2k1DQ">
+								<p></p><a href="/video">Tên bài giảng</a></p>
+							</div>
+						</li>
+						<li>
+							<div class="udlite-block-list-item-content section--row--3PNBT udlite-btn udlite-btn-large udlite-btn-link udlite-text-sm section--item-title--2k1DQ">
+								<p></p><a href="/video">Tên bài giảng</a></p>
+							</div>
+						</li> --}}
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+{{/with}}
