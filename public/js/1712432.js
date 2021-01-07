@@ -14,6 +14,9 @@ function addToCart(){
         },
         success: function(result){
             $('#cart-badge').html(result.totalQuantity);
+            if(result.sc != null){
+                confirm(result.sc);
+            }
         }
     })
 }

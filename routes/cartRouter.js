@@ -18,6 +18,7 @@ router.post('/',(req,res,next)=>{
             .getById(productId)
             .then(product => {
                 var cartItem = req.session.cart.add(product,productId,quantity);
+                cartItem.sc =  null;
                 res.json(cartItem);
             })
             .catch(error=>next(error));
@@ -31,12 +32,14 @@ router.post('/',(req,res,next)=>{
                 .then(product => {
                     var cartItem = req.session.cart.add(product,productId,quantity);
                     //console.log("aaaaaaaaa",req.session.cart.items[productId].item.id);
+                    cartItem.sc =  null;
                     res.json(cartItem);
                 })
                 .catch(error=>next(error));
             
         } else {
             var cartItem = req.session.cart;
+            cartItem.sc = "Sản phẩm này đã có trong giỏ hàng !"
             res.json(cartItem);
         }
     }

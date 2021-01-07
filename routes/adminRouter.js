@@ -395,26 +395,6 @@ router.post("/themkhoahoc/addkhoahoc" , upload.single('avatar'),userlogin.isLogg
     // client.end();
     // res.redirect("/admin/courses");
 }); // ok
-router.post("/themkhoahoc/addbaihoc" , userlogin.isLoggend_Admin,async (req, res) => {
-    const client = new Client(db);
-    await client.connect();
-    const nd = req.body.nd;
-    const link = req.body.link;
-    const courseid = req.body.courseid
-    const selectchuong = {
-        text: `select * from baihoc where courseid = $1::text;`,
-        values: [courseid],
-    }
-    let chuong = await client.query(selectchuong)
-    console.log(chuong.rowCount+1)
-    const query = {
-        text: `INSERT INTO public.baihoc VALUES ((select 'S'||MAX(SUBSTRING(sessionid,2,10)::integer+1) from  baihoc), $1::integer, $2::text, $3::text, $4::text);`,
-        values: [chuong.rowCount+1,nd, link, courseid],
-    }
-    await client.query(query)
-    client.end();
-    res.redirect("/admin/courses");
-});
 
 router.post("/courses/delete/category/:id" ,userlogin.isLoggend_Admin, (req, res, Next) =>{
     let del = require('../controllers/adminController');

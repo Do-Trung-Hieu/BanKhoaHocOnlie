@@ -9,6 +9,7 @@ let userlogin = require('../controllers/islogin');
 //const trollers/islogin'); 
 
 const storage = multer.memoryStorage();
+
 const upload = multer({
     storage: storage,
     fileFilter: function(req,file,cb){
@@ -23,8 +24,16 @@ const upload = multer({
     }
 });
 
+const storage2 = multer.diskStorage({
+    destination: './public/img/product/video/',
+    filename: function(req, file, cb){
+      cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+  });
+
+
 const uploadvideo = multer({
-    storage: storage,
+    storage: storage2,
     fileFilter: function(req,file,cb){
         const filetypes = /mp4/;
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
@@ -32,10 +41,11 @@ const uploadvideo = multer({
         if(mimetype && extname){
             return cb(null,true);
         }else{
-            return cb('Error: Images Only !');
+            return cb('Error: Videos Only !');
         }
     }
-});
+}).single('video');
+
 router.get('/', userlogin.isLoggend_Teacher, (req,res,Next) => {
     let pro = require('../controllers/teacherController');
     pro
@@ -58,7 +68,7 @@ router.get('/', userlogin.isLoggend_Teacher, (req,res,Next) => {
         .catch(error => Next(error));
 });
 
-router.post('/addkhoahoc',upload.single('avatar'),userlogin.isLoggend_Teacher, (req,res,Next)=>{
+router.post('/addkhoahoc',userlogin.isLoggend_Teacher,upload.single('avatar'),(req,res,Next)=>{
     const name = req.body.name;
     const gia = parseFloat(req.body.gia);
     const description = req.body.tongquan;
@@ -103,10 +113,24 @@ router.post('/addkhoahoc',upload.single('avatar'),userlogin.isLoggend_Teacher, (
         .catch(error => Next(error));
 });
 
-router.post('/addbaihoc',uploadvideo.single('video'),userlogin.isLoggend_Teacher, (req, res, Next) =>{
-    let courseid = req.body.courseid;
-    let noidung = req.body.ten;
-    filename = `${Date.now()}-${req.file.originalname}`;
+router.post('/addbaihoc',userlogin.isLoggend_Teacher,(req, res, Next) =>{
+    // let courseid = req.body.courseid;
+    // let noidung = req.body.ten;
+    uploadvideo(req, res, (err) => {
+        if(err){
+          res.send('Loi: ',err);
+        } 
+        else {
+          if(req.file == undefined){
+          res.send('Error: No File Selected!');
+          } 
+          else {
+            console.log(req.file)
+            res.send('Thanh cong !');
+          }
+        }
+      });
+    /*filename = `${Date.now()}-${req.file.originalname}`;
     console.log(filename);
     sharp(req.file.buffer).resize({width: 700,height: 400}).toFile(`./public/img/product/video/${filename}`);
     const video = "/img/product/video/" + filename;
@@ -116,7 +140,7 @@ router.post('/addbaihoc',uploadvideo.single('video'),userlogin.isLoggend_Teacher
         .then(data =>{
             res.redirect('/teacher');
         })
-        .catch(error => Next(error));
+        .catch(error => Next(error));*/
 });
 
 router.post('/delete/course/:id',userlogin.isLoggend_Teacher, (req, res, Next) =>{

@@ -1,7 +1,6 @@
 let controller = {};
 let models = require('../models');
 let Category = models.Category;
-let db = require('../utils/db')
 let Sequelize = require('sequelize');
 let Op = Sequelize.Op;
 

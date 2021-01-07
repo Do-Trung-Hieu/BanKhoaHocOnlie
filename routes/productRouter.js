@@ -2,7 +2,7 @@ const { query } = require('express');
 let express = require('express');
 let router = express.Router();
 const { Client } = require('pg');
-const db = require('../utils/db');
+
 
 router.get('/',(req,res,next)=>{
     if((req.query.category == null) || isNaN(req.query.category)){
