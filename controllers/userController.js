@@ -142,7 +142,6 @@ controller.insertUser = (email,password,hoten,imagepath) =>{
 };
 
 controller.updateUser = (email,hoten) =>{
-    console.log(email,hoten);
     return new Promise((resolve,reject)=>{
         User
             .update({
@@ -159,7 +158,6 @@ controller.updateUser = (email,hoten) =>{
 };
 
 controller.updateUserImage = (email,hoten,image) =>{
-    console.log(email,hoten);
     return new Promise((resolve,reject)=>{
         User
             .update({
@@ -196,4 +194,5 @@ controller.getPayById = (id) => {
         where: { userId: id}
     })
 };
+
 module.exports = controller;

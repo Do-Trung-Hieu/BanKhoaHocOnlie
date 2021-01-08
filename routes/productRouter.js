@@ -2,6 +2,8 @@ const { query } = require('express');
 let express = require('express');
 let router = express.Router();
 const { Client } = require('pg');
+let userController = require('../controllers/userController');
+
 
 router.get('/',(req,res,next)=>{
     if((req.query.category == null) || isNaN(req.query.category)){
@@ -81,37 +83,54 @@ router.get('/:id',(req,res,next)=>{
     
 })
 
-router.get('/:id/productchild',(req,res,next)=>{
-    let get = require('../controllers/productController');
-    get
-        .getDetailCourse(req.params.id)
-        .then(data =>{
-            res.locals.detailcourse = data;
-            //console.log("111111111111111111111",data);
-            // let state = require('../controllers/stateController');
-            // state.getState(req.params.id,req.session.user.id);
-            res.render('admin/DetailOfCourse', { layout: '../admin/layouts/userlayout.handlebars'});
-        })
-        // .then(data => {
-        //     res.locals.state = data;
-        // })
+router.get('/:id/productchild',userController.isLoggedIn,(req,res,next)=>{
+    let pay = require('../controllers/payController');
+    pay.findPay(req.session.user.id,req.params.id)
+    .then(data=>{
+        if(data){
+            let get = require('../controllers/productController');
+            get
+                .getDetailCourse(req.params.id)
+                .then(data =>{
+                    res.locals.detailcourse = data;
+                    res.render('admin/DetailOfCourse', { layout: '../admin/layouts/userlayout.handlebars'});
+                })
+        }
+        else{
+            res.render('404');
+        }
+    })
 })
 
-router.get('/productchild/video/:id',(req,res,next)=>{
-    let pro = require('../controllers/productController');
-    pro
-        .getProbyId(req.params.id)
-        .then(data =>{
-            res.locals.productde = data;
-            let get = require('../controllers/productController');
-            return get.getDetailCourse(data.productId);
+router.get('/productchild/video/:id',userController.isLoggedIn,(req,res,next)=>{
+    let child = require('../controllers/productchildController');
+    child.getProductIdByChildId(req.params.id)
+    .then(data => {
+        let pay = require('../controllers/payController');
+        pay.findPay(req.session.user.id,data.productId)
+        .then (data => {
+            if(data){
+                let pro = require('../controllers/productController');
+            pro
+                .getProbyId(req.params.id)
+                .then(data =>{
+                    res.locals.productde = data;
+                    let get = require('../controllers/productController');
+                    return get.getDetailCourse(data.productId);
+                })
+                .then(data =>{
+                    res.locals.listproduct = data;
+                    let state = require('../controllers/stateController');
+                    state.createState(req.params.id,req.session.user.id);
+                    res.render('video');
+                })
+            }
+            else{
+                res.render('404');
+            }
         })
-        .then(data =>{
-            res.locals.listproduct = data;
-            let state = require('../controllers/stateController');
-            state.createState(req.params.id,req.session.user.id);
-            res.render('video');
-        })
+    })
+    
 })
 
 module.exports = router;

@@ -29,5 +29,18 @@ controller.createPay = (price,userId,productId)=>{
     });
 };
 
+controller.findPay = (userId,productId)=>{
+    return new Promise((resolve,reject)=>{
+        Pay
+            .findOne({
+                where:{
+                    userId,
+                    productId
+                }
+            })
+            .then(data=>resolve(data))
+            .catch(error=>reject(new Error(error)));
+    });
+};
 
 module.exports = controller;

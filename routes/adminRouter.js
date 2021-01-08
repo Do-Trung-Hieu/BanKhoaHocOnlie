@@ -27,7 +27,6 @@ router.get("/", userlogin.isLoggend_Admin, (req, res,next) => {
     tk 
         .getTotalBestSeller()
         .then (data => {
-            console.log(data);
             res.locals.top = data;
             //console.log(top.rows);
             res.render('admin/dashboard', { layout: "../admin/layouts/main.handlebars" })
@@ -39,7 +38,6 @@ router.get("/user" , userlogin.isLoggend_Admin ,(req, res, next) => {
     use
         .getInfoAll()
         .then(data =>{
-            console.log(data);
             res.locals.user = data;
             res.render('admin/tableuser',{layout: "../admin/layouts/main.handlebars" })
         })
@@ -53,7 +51,6 @@ router.get("/user/edit/:email" , userlogin.isLoggend_Admin  ,(req, res, next) =>
     use
         .getInfoDetail(req.params.email)
         .then(data =>{
-            console.log(data);
             res.locals.userss = data;
             res.render("admin/edituser", { layout: "../admin/layouts/main.handlebars" });
         })
@@ -66,7 +63,6 @@ router.post("/user", upload.single("image"), async function (req, res,next) {
         );
     }
     filename = `${Date.now()}-${req.file.originalname}`;
-    console.log(filename);
     sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/users/${filename}`);
     const email = req.body.email;
     const password = req.body.password;
@@ -76,7 +72,6 @@ router.post("/user", upload.single("image"), async function (req, res,next) {
     ktrauser
         .getByEmail(email)
         .then(data=>{
-            console.log(data);
             if(data != null) {
                 return res.send(
                     `<script>confirm("Tài Khoản đã sử dụng"); history.back();</script>`
@@ -86,7 +81,6 @@ router.post("/user", upload.single("image"), async function (req, res,next) {
             return ins.insertUser(email,password,hoten,image);
         })
         .then(data =>{
-            console.log(data);
             res.redirect('/admin/user');
         })
         .catch(error => next(error));
@@ -142,7 +136,6 @@ router.post("/teacher", upload.single("image"),userlogin.isLoggend_Admin , async
         );
     }
     filename = `${Date.now()}-${req.file.originalname}`;
-    console.log(filename);
     sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/users/${filename}`);
     const image = "/img/users/" + filename;
     const email = req.body.email;
@@ -153,7 +146,6 @@ router.post("/teacher", upload.single("image"),userlogin.isLoggend_Admin , async
     ktrauser
         .getByEmail(email)
         .then(data=>{
-            console.log(data);
             if(data != null) {
                 return res.send(
                     `<script>confirm("Tài Khoản đã sử dụng"); history.back();</script>`
@@ -163,7 +155,6 @@ router.post("/teacher", upload.single("image"),userlogin.isLoggend_Admin , async
             return ins.insertTeacher(email,password,hoten,image);
         })
         .then(data =>{
-            console.log(data);
             res.redirect('/admin/teacher');
         })
         .catch(error => next(error));
@@ -357,9 +348,7 @@ router.post("/themkhoahoc/addkhoahoc" , upload.single('avatar'),userlogin.isLogg
     const categoryid = req.body.categoryid;
     const topicid = req.body.topicid;
     const teacherid = req.body.teacher;
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',teacherid);
     filename = `${Date.now()}-${req.file.originalname}`;
-    console.log(filename);
     sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/product/${filename}`);
     const image = "/img/product/" + filename;
     let check = require('../controllers/adminController');
@@ -376,7 +365,6 @@ router.post("/themkhoahoc/addkhoahoc" , upload.single('avatar'),userlogin.isLogg
                 add
                     .insertProduct(name,gia,description,summary,image,categoryid,topicid,teacherid)
                     .then(data =>{
-                        console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',data);
                         res.redirect("/admin/courses");
                     })
                     .catch(error => Next(error));
@@ -406,7 +394,6 @@ router.post("/themkhoahoc/addbaihoc" , userlogin.isLoggend_Admin,async (req, res
         values: [courseid],
     }
     let chuong = await client.query(selectchuong)
-    console.log(chuong.rowCount+1)
     const query = {
         text: `INSERT INTO public.baihoc VALUES ((select 'S'||MAX(SUBSTRING(sessionid,2,10)::integer+1) from  baihoc), $1::integer, $2::text, $3::text, $4::text);`,
         values: [chuong.rowCount+1,nd, link, courseid],

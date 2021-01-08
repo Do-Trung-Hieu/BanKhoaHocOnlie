@@ -20,19 +20,26 @@ controller.getState = (productId,userId)=>{
 
 
 controller.createState = (productchildId,userId)=>{
-    return ProductChild.findOne({
-            attributes: ['productId'],
-            where:{
-                id: productchildId
+    return State.findOne({
+            where: {
+                productchildId,
+                userId
             }
         })
-        .then(data => {
-            State.create({
-                watched: true,
-                productchildId: productchildId,
-                productId: data.productId,
-                userId: userId
-            });
+        .then (data => {
+            if(data == null){
+                let prochild = require('../controllers/productchildController');
+                prochild.getProductIdByChildId(productchildId)
+                .then(data => {
+                    State.create({
+                        watched: true,
+                        productchildId: productchildId,
+                        productId: data.productId,
+                        userId: userId
+                    });
+                })
+                
+            }
         })
     
 };

@@ -75,14 +75,12 @@ router.post('/addkhoahoc',userlogin.isLoggend_Teacher,upload.single('avatar'), (
     const topicid = req.body.topicid;
     //console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',teacherid);
     filename = `${Date.now()}-${req.file.originalname}`;
-    console.log(filename);
     sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/product/${filename}`);
     const image = "/img/product/" + filename;
     let cate = require('../controllers/teacherController');
     cate
         .checkCateById(topicid)
         .then(data =>{
-            console.log(data);
             if(data.categoryId == categoryid){
                 let namePro = require('../controllers/teacherController');
                 namePro
@@ -141,8 +139,6 @@ router.post('/addbaihoc',userlogin.isLoggend_Teacher,(req, res, Next) =>{
           else {
             let courseid = req.body.courseid;
             let noidung = req.body.ten;
-            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaa' , courseid);
-            console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', noidung);
             temp=Object.values(req.file);
             let video = "/img/product/video/" + temp[5];
             let add = require('../controllers/teacherController');
@@ -185,7 +181,6 @@ router.post('/login', (req,res,next) => {
     teacher
         .getByEmail(email)
         .then(teach => {
-            console.log(teach);
             if(teach){
                 if (teacher.comparePassword(password,teach.password)){
                     req.session.cookie.maxAge = keepLoggedIn ? 30*24*60*60*1000 : null;
