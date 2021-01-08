@@ -87,8 +87,14 @@ router.get('/:id/productchild',(req,res,next)=>{
         .getDetailCourse(req.params.id)
         .then(data =>{
             res.locals.detailcourse = data;
+            //console.log("111111111111111111111",data);
+            // let state = require('../controllers/stateController');
+            // state.getState(req.params.id,req.session.user.id);
             res.render('admin/DetailOfCourse', { layout: '../admin/layouts/userlayout.handlebars'});
         })
+        // .then(data => {
+        //     res.locals.state = data;
+        // })
 })
 
 router.get('/productchild/video/:id',(req,res,next)=>{
@@ -101,8 +107,9 @@ router.get('/productchild/video/:id',(req,res,next)=>{
             return get.getDetailCourse(data.productId);
         })
         .then(data =>{
-            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',data)
             res.locals.listproduct = data;
+            let state = require('../controllers/stateController');
+            state.createState(req.params.id,req.session.user.id);
             res.render('video');
         })
 })

@@ -173,7 +173,11 @@ controller.getById = (id) =>{
 
 controller.getDetailCourse = (id) =>{
     return ProductChild.findAll({
-        where: { productId: id}
+        order: [['id','ASC']],
+        include: [{model: models.State,require: false}],
+        where: { 
+            productId: id
+        },
     })
 };
 
