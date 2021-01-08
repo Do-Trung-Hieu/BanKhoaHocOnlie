@@ -3,10 +3,8 @@ let router = express();
 const path = require("path");
 let sharp = require('sharp');
 let multer = require('multer');
-const { error } = require("console");
 let teacher = require('../controllers/teacherController');
 let userlogin = require('../controllers/islogin');
-//const trollers/islogin'); 
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -44,6 +42,61 @@ const uploadvideo = multer({
     }
 }).single('video');
 
+router.get('/login',(req,res,next) => {
+    req.session.returnURL = req.query.returnURL;
+    res.render('teacherLogin');
+});
+router.post('/login', (req,res,next) => {
+    let email = req.body.email;
+    let password = req.body.password;
+    let keepLoggedIn = (req.body.keepLoggedIn != undefined);
+
+    if(email == '' || password == ''){
+        return res.render('teacherLogin',{
+            message: 'Please fill out the form !',   
+            type: 'alert-danger'
+        });
+    }
+
+    teacher
+        .getByEmail(email)
+        .then(teach => {
+            console.log(teach);
+            if(teach){
+                if (teacher.comparePassword(password,teach.password)){
+                    req.session.cookie.maxAge = keepLoggedIn ? 30*24*60*60*1000 : null;
+                    req.session.teacher = teach;
+                    req.session.isTeacher = teach;
+                    if(req.session.returnURL){
+                        res.redirect(req.session.returnURL);
+                    } else{
+                        res.redirect('/teacher');
+                    }
+                    
+                } else{
+                    res.render('teacherLogin',{
+                        message: 'Incorrect password!',
+                        type: 'alert-danger'
+                    });
+                }
+            } 
+            else{
+                res.render('teacherLogin',{
+                    message: 'Email does not exists!',
+                    type: 'alert-danger'
+                });
+            }
+        });
+});
+router.get('/logout',(req,res,next) => {
+    req.session.destroy(error => {
+        if(error){
+            return next(error);
+        } 
+        return res.redirect('/teacher/login');
+    });
+});
+
 router.get('/', userlogin.isLoggend_Teacher, (req,res,Next) => {
     let pro = require('../controllers/teacherController');
     pro
@@ -75,12 +128,14 @@ router.post('/addkhoahoc',userlogin.isLoggend_Teacher,upload.single('avatar'), (
     const topicid = req.body.topicid;
     //console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',teacherid);
     filename = `${Date.now()}-${req.file.originalname}`;
+    console.log(filename);
     sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/product/${filename}`);
     const image = "/img/product/" + filename;
     let cate = require('../controllers/teacherController');
     cate
         .checkCateById(topicid)
         .then(data =>{
+            console.log(data);
             if(data.categoryId == categoryid){
                 let namePro = require('../controllers/teacherController');
                 namePro
@@ -108,22 +163,6 @@ router.post('/addkhoahoc',userlogin.isLoggend_Teacher,upload.single('avatar'), (
         })
         .catch(error => Next(error));
 });
-
-// router.post('/addbaihoc',userlogin.isLoggend_Teacher,uploadvideo.single('video'), (req, res, Next) =>{
-//     let courseid = req.body.courseid;
-//     let noidung = req.body.ten;
-//     filename = `${Date.now()}-${req.file.originalname}`;
-//     console.log(filename);
-//     sharp(req.file.buffer).resize({width: 700,height: 400}).toFile(`./public/img/product/video/${filename}`);
-//     const video = "/img/product/video/" + filename;
-//     let add = require('../controllers/teacherController');
-//     add
-//         .addCourseChild(noidung,video,courseid)
-//         .then(data =>{
-//             res.redirect('/teacher');
-//         })
-//         .catch(error => Next(error));
-// });
 
 router.post('/addbaihoc',userlogin.isLoggend_Teacher,(req, res, Next) =>{
    
@@ -161,54 +200,6 @@ router.post('/delete/course/:id',userlogin.isLoggend_Teacher, (req, res, Next) =
             res.redirect('/teacher')
         })
         .catch(error => Next(error));
-});
-router.get('/login',(req,res,next) => {
-    //req.session.returnURL = req.query.returnURL;
-    res.render('teacherLogin');
-});
-router.post('/login', (req,res,next) => {
-    let email = req.body.email;
-    let password = req.body.password;
-    let keepLoggedIn = (req.body.keepLoggedIn != undefined);
-
-    if(email == '' || password == ''){
-        return res.render('teacherLogin',{
-            message: 'Please fill out the form !',   
-            type: 'alert-danger'
-        });
-    }
-
-    teacher
-        .getByEmail(email)
-        .then(teach => {
-            if(teach){
-                if (teacher.comparePassword(password,teach.password)){
-                    req.session.cookie.maxAge = keepLoggedIn ? 30*24*60*60*1000 : null;
-                    req.session.teacher = teach;
-                    //req.session.isLoggedIn = false;
-                    req.session.isLoggedIn2 = teach;
-                    //console.log("aaaaaaaaaaaaaaaaaaa",req.session.isLoggedIn2);
-                    req.session.isTeacher = true;
-                    /*if(req.session.returnURL){
-                        res.redirect(req.session.returnURL);
-                    } else{*/
-                        res.redirect('/teacher');
-                    //}
-                    
-                } else{
-                    res.render('teacherLogin',{
-                        message: 'Incorrect password!',
-                        type: 'alert-danger'
-                    });
-                }
-            } 
-            else{
-                res.render('teacherLogin',{
-                    message: 'Email does not exists!',
-                    type: 'alert-danger'
-                });
-            }
-        });
 });
 
 

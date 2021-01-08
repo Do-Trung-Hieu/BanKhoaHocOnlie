@@ -3,9 +3,8 @@ let router = express();
 const path = require("path");
 let sharp = require('sharp');
 let multer = require('multer');
-const { error } = require("console");
 let userlogin = require('../controllers/islogin');
-//const trollers/islogin'); 
+let userController = require('../controllers/userController');
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -22,11 +21,69 @@ const upload = multer({
     }
 });
 
+router.get('/login',(req,res,next) => {
+    req.session.returnURL = req.query.returnURL;
+    res.render('adminlogin');
+});
+
+router.post('/login',(req,res,next) => {
+    let email = req.body.email;
+    let password = req.body.password;
+    let keepLoggedIn = (req.body.keepLoggedIn != undefined);
+
+    if(email == '' || password == ''){
+        return res.render('register',{
+            message: 'Please fill out the form !',   
+            type: 'alert-danger'
+        });
+    }
+
+    userController
+        .getUserByEmail(email)
+        .then(user => {
+            if(user){
+                if (userController.comparePassword(password,user.password)){
+                    req.session.cookie.maxAge = keepLoggedIn ? 30*24*60*60*1000 : null;
+                    //req.session.user = user;
+                    req.session.nameAdmin = user.fullname;
+                    req.session.isAdmin = user;
+                    if(req.session.returnURL){
+                        res.redirect(req.session.returnURL);
+                    } else{
+
+                        res.redirect('/admin');
+                    }
+                    
+                } else{
+                    res.render('login',{
+                        message: 'Incorrect password!',
+                        type: 'alert-danger'
+                    });
+                }
+            } 
+            else{
+                res.render('adminlogin',{
+                    message: 'Email does not exists!',
+                    type: 'alert-danger'
+                });
+            }
+        });
+});
+router.get('/logout',(req,res,next) => {
+    req.session.destroy(error => {
+        if(error){
+            return next(error);
+        } 
+        return res.redirect('/admin/login');
+    });
+});
+
 router.get("/", userlogin.isLoggend_Admin, (req, res,next) => {
     let tk = require('../controllers/adminController');
     tk 
         .getTotalBestSeller()
         .then (data => {
+            console.log(data);
             res.locals.top = data;
             //console.log(top.rows);
             res.render('admin/dashboard', { layout: "../admin/layouts/main.handlebars" })
@@ -38,6 +95,7 @@ router.get("/user" , userlogin.isLoggend_Admin ,(req, res, next) => {
     use
         .getInfoAll()
         .then(data =>{
+            console.log(data);
             res.locals.user = data;
             res.render('admin/tableuser',{layout: "../admin/layouts/main.handlebars" })
         })
@@ -51,18 +109,20 @@ router.get("/user/edit/:email" , userlogin.isLoggend_Admin  ,(req, res, next) =>
     use
         .getInfoDetail(req.params.email)
         .then(data =>{
+            console.log(data);
             res.locals.userss = data;
             res.render("admin/edituser", { layout: "../admin/layouts/main.handlebars" });
         })
         .catch(error => next(error));
 }); // ok
-router.post("/user", upload.single("image"), async function (req, res,next) {
+router.post("/user", upload.single("image"), userlogin.isLoggend_Admin, async function (req, res,next) {
     if (!req.file) {
         return res.send(
             `<script>confirm("Vui lòng thêm 1 hình ảnh"); history.back();</script>`
         );
     }
     filename = `${Date.now()}-${req.file.originalname}`;
+    console.log(filename);
     sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/users/${filename}`);
     const email = req.body.email;
     const password = req.body.password;
@@ -72,6 +132,7 @@ router.post("/user", upload.single("image"), async function (req, res,next) {
     ktrauser
         .getByEmail(email)
         .then(data=>{
+            console.log(data);
             if(data != null) {
                 return res.send(
                     `<script>confirm("Tài Khoản đã sử dụng"); history.back();</script>`
@@ -81,11 +142,12 @@ router.post("/user", upload.single("image"), async function (req, res,next) {
             return ins.insertUser(email,password,hoten,image);
         })
         .then(data =>{
+            console.log(data);
             res.redirect('/admin/user');
         })
         .catch(error => next(error));
 }); // ok
-router.post("/user/edit/:email/updateuser", async (req, res,next) => {
+router.post("/user/edit/:email/updateuser", userlogin.isLoggend_Admin, async (req, res,next) => {
     const hoten = req.body.hoten;
     const isadmin = req.body.isadmin;
     let up = require('../controllers/userController');
@@ -98,7 +160,7 @@ router.post("/user/edit/:email/updateuser", async (req, res,next) => {
         )
         .catch(error => next(error));
 }); // ok
-router.post("/user/delete/:email", (req,res,Next) =>{
+router.post("/user/delete/:email", userlogin.isLoggend_Admin, (req,res,Next) =>{
     let del = require('../controllers/userController');
     del
         .deleteUser(req.params.email)
@@ -129,13 +191,14 @@ router.get("/teacher/edit/:email" , userlogin.isLoggend_Admin , async (req, res)
             res.render("admin/editteacher", { layout: "../admin/layouts/main.handlebars" });
         })
 }); // ok
-router.post("/teacher", upload.single("image"),userlogin.isLoggend_Admin , async function (req,res,next) {
+router.post("/teacher",userlogin.isLoggend_Admin , upload.single("image"), async function (req,res,next) {
     if (!req.file) {
         return res.send(
             `<script>confirm("Vui lòng thêm 1 hình ảnh"); history.back();</script>`
         );
     }
     filename = `${Date.now()}-${req.file.originalname}`;
+    console.log(filename);
     sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/users/${filename}`);
     const image = "/img/users/" + filename;
     const email = req.body.email;
@@ -146,15 +209,17 @@ router.post("/teacher", upload.single("image"),userlogin.isLoggend_Admin , async
     ktrauser
         .getByEmail(email)
         .then(data=>{
+            console.log(data);
             if(data != null) {
                 return res.send(
                     `<script>confirm("Tài Khoản đã sử dụng"); history.back();</script>`
                 );
             }
             let ins = require('../controllers/teacherController');
-            return ins.insertTeacher(email,password,hoten,image);
+            return ins.insertTeacher(email,password,hoten,image,chuyenmon);
         })
         .then(data =>{
+            console.log(data);
             res.redirect('/admin/teacher');
         })
         .catch(error => next(error));
@@ -184,11 +249,8 @@ router.post("/teacher/delete/:email" , userlogin.isLoggend_Admin, (req,res,Next)
 }); // ok
 //------------------------------------------------------------------------------
 router.get("/courses"  ,userlogin.isLoggend_Admin, async (req, res , Next) => {
-    // const client = new Client(db);
-    // await client.connect();
     let topic_id;
     let category_id;
-    let product_id ;
     if(!req.query.categoryid){
         category_id = 0;
         if (!req.query.topicid) {
@@ -213,7 +275,6 @@ router.get("/courses"  ,userlogin.isLoggend_Admin, async (req, res , Next) => {
     cat
         .getCategory()
         .then(data =>{
-            //console.log('aaaaaaaaaaaaaaaaaaa',data[0]);
             res.locals.Category = data;
             let teacher = require('../controllers/teacherController');
             return teacher.getAll();
@@ -224,67 +285,20 @@ router.get("/courses"  ,userlogin.isLoggend_Admin, async (req, res , Next) => {
             return topic.getTopic(category_id);
         })
         .then(data =>{
-            //console.log('ssssssssssssssssss',data);
             res.locals.Topic = data;
             let pro = require("../controllers/adminController");
             return pro.getProduct(category_id,topic_id);
         })
         .then(data =>{
-            //console.log(data);
             res.locals.Product = data;
             res.render('admin/danhmuckhoahoc', { layout: "../admin/layouts/main.handlebars"});
         })
         .catch(error => Next(error));
-    // let cat = require('../controllers/adminController');
-    // cat
-    //     .getCategory()
-    //     .then(data => {
-    //         console.log(data);
-    //         res.locals.Category = data;
-            
-    //         let topic = require('../controllers/adminController');
-    //         return topic.getTopic(category_id);
-    //     })
-    //     .then(data =>{
-    //         res.locals.Topic = data;
-    //         let product = require('../controllers/adminController');
-    //         console.log('bbbbbbbbbbbbbbbbbbbb',data);
-    //         console.log('sssssssssssss',topic_id)
-    //         return product.getProduct(topic_id);
-    //     })
-    //     .then(data => {
-    //         console.log('aaaaaaaaaaaaaaaaaaa',data);
-    //         res.locals.Product = data;
-    //         let teach = require('../controllers/teacherController');
-    //         return teach.getAll();
-    //     })
-    //     .then(data =>{
-    //         res.locals.giaovien = data;
-    //         res.render('admin/danhmuckhoahoc', { layout: "../admin/layouts/main.handlebars"});
-    //     })
-    // // const danhmuc = await client.query("SELECT * from danhmuc");
-    // // const courses = await client.query(
-    // //     "SELECT * from khoahoc where danhmucid = '" + danhmuc_id + "'"
-    // // );
-    // // const baihoc = await client.query(
-    // //     "SELECT * from baihoc where courseid = '" + course_id + "'"
-    // // );
-    // // const giaovien = await client.query(
-    // //     "select * from giaovien"
-    // // );
-    // // res.render("admin/danhmuckhoahoc", {
-    // //     danhmuc: danhmuc.rows,
-    // //     courses: courses.rows,
-    // //     baihoc: baihoc.rows,
-    // //     giaovien: giaovien.rows,
-    // //     layout: "../admin/layouts/main.hbs"
-    // // });
-    // // client.end();
 }); // ok
 router.get("/themkhoahoc"  ,userlogin.isLoggend_Admin, async (req, res) => {
     res.render('admin/editkhoahoc', { layout: "../admin/layouts/main.hbs" })
 }); // ok 
-router.post("/themkhoahoc/addcategory" ,upload.single("avatar"), userlogin.isLoggend_Admin, (req, res, Next) => {
+router.post("/themkhoahoc/addcategory" , userlogin.isLoggend_Admin,upload.single("avatar"), (req, res, Next) => {
 
     if(req.file == undefined){
         return res.send('fail');
@@ -335,12 +349,7 @@ router.post("/themkhoahoc/addtopic" ,userlogin.isLoggend_Admin, async (req, res,
         .catch(error => Next(error));
 }); // ok
 
-router.post("/themkhoahoc/addkhoahoc" , upload.single('avatar'),userlogin.isLoggend_Admin, async (req, res, Next) => {
-    // const imagePath = path.join(__dirname, "../public/img");
-    // // call class Resize
-    // const fileUpload = new Resize(imagePath);
-    // const client = new Client(db);
-    // await client.connect();
+router.post("/themkhoahoc/addkhoahoc" ,userlogin.isLoggend_Admin, upload.single('avatar'), async (req, res, Next) => {
     const name = req.body.name;
     const gia = parseFloat(req.body.gia);
     const description = req.body.tongquan;
@@ -349,7 +358,8 @@ router.post("/themkhoahoc/addkhoahoc" , upload.single('avatar'),userlogin.isLogg
     const topicid = req.body.topicid;
     const teacherid = req.body.teacher;
     filename = `${Date.now()}-${req.file.originalname}`;
-    sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/product/${filename}`);
+    console.log(filename);
+    sharp(req.file.buffer).resize({width: 263,height: 280}).toFile(`./public/img/product/${filename}`);
     const image = "/img/product/" + filename;
     let check = require('../controllers/adminController');
     check
@@ -370,38 +380,7 @@ router.post("/themkhoahoc/addkhoahoc" , upload.single('avatar'),userlogin.isLogg
                     .catch(error => Next(error));
             }
         })
-    
-
-    // const filename = await fileUpload.save(req.file.buffer);
-    // const image = "/img/" + filename;
-    // console.log(req.body)
-    // const query = {
-    //     text: `INSERT INTO public.khoahoc VALUES ((select 'C'||MAX(SUBSTRING(courseid,2,10)::integer+1) from khoahoc), $1::text, $2::integer, $3::text, $4::integer, $7::text, $6::text, $5::text);`,
-    //     values: [name, gia, tongquan, chitiet, danhmuc, giaovien,image],
-    // }
-    // await client.query(query)
-    // client.end();
-    // res.redirect("/admin/courses");
 }); // ok
-router.post("/themkhoahoc/addbaihoc" , userlogin.isLoggend_Admin,async (req, res) => {
-    const client = new Client(db);
-    await client.connect();
-    const nd = req.body.nd;
-    const link = req.body.link;
-    const courseid = req.body.courseid
-    const selectchuong = {
-        text: `select * from baihoc where courseid = $1::text;`,
-        values: [courseid],
-    }
-    let chuong = await client.query(selectchuong)
-    const query = {
-        text: `INSERT INTO public.baihoc VALUES ((select 'S'||MAX(SUBSTRING(sessionid,2,10)::integer+1) from  baihoc), $1::integer, $2::text, $3::text, $4::text);`,
-        values: [chuong.rowCount+1,nd, link, courseid],
-    }
-    await client.query(query)
-    client.end();
-    res.redirect("/admin/courses");
-});
 
 router.post("/courses/delete/category/:id" ,userlogin.isLoggend_Admin, (req, res, Next) =>{
     let del = require('../controllers/adminController');

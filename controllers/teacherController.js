@@ -7,8 +7,6 @@ let Topic = models.Topic;
 let ProductChild = models.Productchild;
 let Sequelize = require('sequelize');
 let bcryptjs = require('bcryptjs');
-const { resolve } = require('path');
-const { rejects } = require('assert');
 let op = Sequelize.Op;
 
 controller.getAll = () =>{
@@ -32,10 +30,15 @@ controller.getByEmail = (email) =>{
     })
 };
 
-controller.insertTeacher = (email,password,hoten,imagepath) =>{
+controller.insertTeacher = (email,password,hoten,imagepath,chuyenmon) =>{
     return new Promise((resolve,reject)=>{
         Teacher
-            .create({ email: email,password:bcryptjs.hashSync(password, bcryptjs.genSaltSync(10)),fullname:hoten,imagepath:imagepath})
+            .create({ email: email,
+                password:bcryptjs.hashSync(password, bcryptjs.genSaltSync(10)),
+                fullname:hoten,
+                imagepath:imagepath,
+                chuyenmon: chuyenmon,
+            })
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
     })
@@ -104,6 +107,8 @@ controller.insertCourse = (name,price,description,summary,imagepath,categoryid,t
         price: price,
         description: description,
         summary: summary,
+        overallreview: 0,
+        reviewCount: 0,
         imagepath: imagepath,
         categoryId: categoryid,
         topicId: topicid,

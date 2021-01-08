@@ -15,4 +15,4 @@ controller.getProductIdByChildId = (id) => {
     });
 };
 
-module.exports = controller;
+module.exports = controller; 

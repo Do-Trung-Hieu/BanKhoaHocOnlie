@@ -13,9 +13,9 @@
           </div>
           <div class="col-sm-7 col-lg-6 offset-lg-1 pl-4 pl-md-5 pl-lg-0">
             <div class="hero-banner__content">
-              <h3>Học viên Online HOCNUA.VN</h3>
-              <h4>Chia sẻ kiến thức và kinh nghiệm thực tế tới hàng triệu người</h4>
-              <h3>HỌC MỌI LÚC, MỌI NƠI</h3>
+              <h3>Website Online HOCNUA.VN</h3>
+              <h4>Share knowledge and practical experience for million people</h4>
+              <h3>LEARN EVERY TIME, EVERYWHERE</h3>
               <a class="button button-hero" href="/products">View All Courses</a>
             </div>
           </div>
@@ -31,7 +31,7 @@
         <div class="hero-carousel__slide">
           <img src="{{imagepath}}" alt="" class="img-fluid">
           <a href="/products?catrgory={{id}}" class="hero-carousel__slideOverlay">
-            <p>Danh mục</p>
+            <p>Category</p>
             <h3>{{name}}</h3>
           </a>
         </div>
@@ -42,20 +42,23 @@
 
     <!-- ================ trending product section start ================= -->  
     <section class="section-margin calc-60px">
-      <div class="container">
-        <div class="section-intro pb-60px">
-          <p>Popular Item in the market</p>
-          <h2>Trending <span class="section-intro__style">Product</span></h2>
-        </div>
+      <div class="courses">
+          <div class="container">
+            <div class="section-intro pb-20px">
+              <p>Popular Item in the market</p>
+              <h2>Trending <span class="section-intro__style">Product</span></h2>
+            </div>
 
-        <div class="row">
-          {{#each trendingProducts}}
-          <div class="col-md-6 col-lg-4 col-xl-3">
-            {{>product}}
+            <div class="row">
+              {{#each trendingProducts}}
+              <div class="col-md-6 col-lg-4 col-xl-4" >
+                {{>product}}
+              </div>
+              {{/each}}
+            </div>
           </div>
-          {{/each}}
-        </div>
       </div>
+      
     </section>
     <!-- ================ trending product section end ================= -->  
 
@@ -106,19 +109,19 @@
         </div>
       </div>
     </section> --}}
-    <section class="section-margin calc-60px">
+    {{!-- <section class="section-margin calc-60px">
       <div class="container">
-        <div class="section-intro pb-60px">
+        <div class="section-intro pb-20px">
           <p>Popular Item in the market</p>
           <h2>Best <span class="section-intro__style">Seller</span></h2>
         </div>
 
         <div class="row">
-          {{#each bestSellers}}
-          <div class="col-md-6 col-lg-4 col-xl-3">
+          {{#each bestSellers
+          <div class="col-md-6 col-lg-4 col-xl-4">
             <div class="card text-center card-product">
               <div class="card-product__img">
-                <img class="card-img" src="{{Product.imagepath}}" alt="">
+                <img class="card-img" src="{{Product.imagepath" alt="">
                 <ul class="card-product__imgOverlay">
                   <li><button><i class="ti-search"></i></button></li>
                   <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -126,11 +129,32 @@
                 </ul>
               </div>
               <div class="card-body">
-                {{!-- <p>{{Topic.name}}</p> --}}
-                <h4 class="card-product__title"><a href="/products/{{Product.id}}">{{Product.name}}</a></h4>
-                <p class="card-product__price">${{Product.price}}</p>
+                 <p>{{Topic.name</p>
+                <h4 class="card-product__title"><a href="/products/{{Product.id">{{Product.name</a></h4>
+                <p class="card-product__price">${{Product.price</p>
               </div>
             </div>
+            {{> product
+          </div>
+          {{/each
+        </div>
+      </div>
+    </section> --}}
+
+    <section class="section-margin mt-0">
+      <div class="container">
+        <div class="section-intro pb-20px">
+          <p>Popular Item in the market</p>
+          <h2>Best <span class="section-intro__style">Seller</span></h2>
+        </div>
+        <div class="owl-carousel owl-theme hero-carousel">
+          {{#each categories}}
+          <div class="hero-carousel__slide">
+            <img src="{{imagepath}}" alt="" class="img-fluid">
+            <a href="/products?catrgory={{id}}" class="hero-carousel__slideOverlay">
+              <p>Category</p>
+              <h3>{{name}}</h3>
+            </a>
           </div>
           {{/each}}
         </div>
@@ -145,11 +169,33 @@
           <p>Popular Item in the market</p>
           <h2>Latest <span class="section-intro__style">Courses</span></h2>
         </div>
-        <div class="owl-carousel owl-theme" id="bestSellerCarousel">
+        <div class="row">
           {{#each latestCourses}}
+          <div class="col-md-6 col-lg-4 col-xl-4">
+            {{!-- <div class="card text-center card-product">
+              <div class="card-product__img">
+                <img class="card-img" src="{{Product.imagepath" alt="">
+                <ul class="card-product__imgOverlay">
+                  <li><button><i class="ti-search"></i></button></li>
+                  <li><button><i class="ti-shopping-cart"></i></button></li>
+                  <li><button><i class="ti-heart"></i></button></li>
+                </ul>
+              </div>
+              <div class="card-body">
+                 <p>{{Topic.name</p>
+                <h4 class="card-product__title"><a href="/products/{{Product.id">{{Product.name</a></h4>
+                <p class="card-product__price">${{Product.price</p>
+              </div>
+            </div> --}}
+            {{> product}}
+          </div>
+          {{/each}}
+        </div>
+        {{!-- <div class="owl-carousel owl-theme" id="bestSellerCarousel">
+          {{#each latestCourses
           <div class="card text-center card-product">
             <div class="card-product__img">
-              <img class="img-fluid" src="{{imagepath}}" alt="">
+              <img class="img-fluid" src="{{imagepath" alt="">
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
                 <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -158,12 +204,12 @@
             </div>
           
             <div class="card-body">
-              {{!-- <p>Accessories</p> --}}
-              <h4 class="card-product__title"><a href="/products/{{id}}">{{name}}</a></h4>
+              {{!-- <p>Accessories</p>
+              <h4 class="card-product__title"><a href="/products/{{id">{{name</a></h4>
             </div>
           </div>
           {{/each}}
-        </div>
+        </div> --}}
       </div>
     </section>
     <!-- ================ Newest Product item  carousel end ================= --> 
@@ -251,7 +297,6 @@
 
             </form>
           </div>
-          
         </div>
       </div>
     </section>

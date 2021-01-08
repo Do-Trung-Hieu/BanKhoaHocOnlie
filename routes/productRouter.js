@@ -4,7 +4,6 @@ let router = express.Router();
 const { Client } = require('pg');
 let userController = require('../controllers/userController');
 
-
 router.get('/',(req,res,next)=>{
     if((req.query.category == null) || isNaN(req.query.category)){
         req.query.category = 0;
@@ -77,12 +76,17 @@ router.get('/:id',(req,res,next)=>{
         })
         .then(review=>{
             res.locals.userReview = review;
+            let trending = require('../controllers/productController');
+            return trending.getTrendingProducts();
+        })
+        .then(data =>{
+            res.locals.trendingProducts = data;
             res.render('single-product');
         })
         .catch(error => next(error));
     
 })
-
+//-------------------------------------------------------------------------------
 router.get('/:id/productchild',userController.isLoggedIn,(req,res,next)=>{
     let pay = require('../controllers/payController');
     pay.findPay(req.session.user.id,req.params.id)
@@ -100,7 +104,7 @@ router.get('/:id/productchild',userController.isLoggedIn,(req,res,next)=>{
             res.render('404');
         }
     })
-})
+});
 
 router.get('/productchild/video/:id',userController.isLoggedIn,(req,res,next)=>{
     let child = require('../controllers/productchildController');
@@ -130,7 +134,6 @@ router.get('/productchild/video/:id',userController.isLoggedIn,(req,res,next)=>{
             }
         })
     })
-    
 })
 
 module.exports = router;

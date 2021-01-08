@@ -4,29 +4,34 @@ module.exports = {
     up: (queryInterface, Sequelize) => {
         let data = [
             { email: 'huongnguyen@gmail.com',
-            password: '1234',
+            password: '$2a$10$mhrCmOb0ZBRiJErfHI7AleXyEOl./7.HFemIsWrBbfk5fRhjJY83y',
             fullname: 'Nguyễn Thị Hường',
-            imagepath: 'img/UAT/nth.jpg',
+            imagepath: '/img/users/nth.jpg',
+            chuyenmon: 'Ngôn ngữ'
             },
             { email: 'datnguyen@gmail.com',
-            password: '1234',
+            password: '$2a$10$mhrCmOb0ZBRiJErfHI7AleXyEOl./7.HFemIsWrBbfk5fRhjJY83y',
             fullname: 'Phan Tiến Đạt',
-            imagepath: 'img/UAT/ptd.jpg',
+            imagepath: '/img/users/ptd.jpg',
+            chuyenmon: 'Lập trình'
             },
             { email: 'hongnguyen@gmail.com',
-            password: '1234',
+            password: '$2a$10$mhrCmOb0ZBRiJErfHI7AleXyEOl./7.HFemIsWrBbfk5fRhjJY83y',
             fullname: 'Nguyễn Thị Hồng',
-            imagepath: 'img/UAT/nth.jpg',
+            imagepath: '/img/users/nth.jpg',
+            chuyenmon: 'Marketing'
             },
             { email: 'tanvo@gmail.com',
-            password: '1234',
+            password: '$2a$10$mhrCmOb0ZBRiJErfHI7AleXyEOl./7.HFemIsWrBbfk5fRhjJY83y',
             fullname: 'Võ Văn Tần',
-            imagepath: 'img/UAT/vvt.jpg',
+            imagepath: '/img/users/vvt.jpg',
+            chuyenmon: 'WEB'
             },
             { email: 'laopham@gmail.com',
-            password: '1234',
+            password: '$2a$10$mhrCmOb0ZBRiJErfHI7AleXyEOl./7.HFemIsWrBbfk5fRhjJY83y',
             fullname: 'Phạm Ngũ Lão',
-            imagepath: 'img/UAT/pnl.jpg',
+            imagepath: '/img/users/pnl.jpg',
+            chuyenmon: 'Toán'
             },
 
 

@@ -2,7 +2,6 @@ let express = require('express');
 let userController = require('../controllers/userController');
 let payController = require('../controllers/payController');
 let stateController = require('../controllers/stateController');
-
 let router = express.Router();
 
 router.get('/',(req,res,next)=>{
@@ -14,6 +13,7 @@ router.post('/',userController.isLoggedIn,(req,res,next)=>{
     payController   
         .getPayByUser(req.session.user.id)
         .then(pay => {
+            console.log(pay);
             let flag = 0;
             for (let i = 0; i < pay.length ; i++){
                 if(req.session.cart.items[pay[i].productId] != undefined){
@@ -30,12 +30,9 @@ router.post('/',userController.isLoggedIn,(req,res,next)=>{
             let flag2 = 0
             
             giohang = req.session.cart.generateArray();
-
             for (let i = 0; i < giohang.length ; i++){
 
                 payController.createPay(giohang[i].item.price,req.session.user.id,giohang[i].item.id);
-                //stateController.createState(giohang[i].item.id,req.session.user.id);
-
                 req.session.cart.remove(giohang[i].item.id);
 
                 if( flag2 == (giohang.length - 1) ){

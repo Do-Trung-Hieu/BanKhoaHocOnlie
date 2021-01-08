@@ -14,8 +14,8 @@ controller.getTrendingProducts = ()=>{
                 order:[
                     ['overallreview','DESC']
                 ],
-                limit:8,
-                include: [{model: models.Topic}],
+                limit:9,
+                include: [{model: models.Topic},{model: models.Teacher}],
                 attributes: ['id','name','price','imagepath']
             })
             .then(data=>resolve(data))
@@ -54,7 +54,7 @@ controller.getNewest = () => {
                 ],
                 attributes: ['name','price','imagepath'],
                 include: [],
-                limit : 10,
+                limit : 9,
 
             })
             .then(data => resolve(data))
@@ -66,7 +66,11 @@ controller.getNewest = () => {
 controller.getAll = (query)=>{
     return new Promise((resolve,reject)=>{
         let options = {
-            include: [{model: models.Category}],
+            include: [
+                {model: models.Category},
+                {model: models.Topic},
+                {model: models.Teacher}
+            ],
             attributes: ['id','name','price','imagepath','categoryId'],
             where:{
                 price: {

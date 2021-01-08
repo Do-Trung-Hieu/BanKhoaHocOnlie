@@ -4,10 +4,13 @@ let Pay = models.Pay;
 let Category = models.Category;
 let Topic = models.Topic;
 let Product = models.Product;
+let bcryptjs = require('bcryptjs');
 let Sequelize = require('sequelize');
-const { resolve } = require('path');
-const { options } = require('../routes/adminRouter');
 let Op = Sequelize.Op;
+
+controller.comparePassword = (password,hash) => {
+    return bcryptjs.compareSync(password,hash);
+};
 
 controller.getThongKe = ()=>{
     return new Promise((resolve,reject)=>{ 

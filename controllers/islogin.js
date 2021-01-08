@@ -4,7 +4,7 @@ controller.isLoggend_Admin = (req, res, next) => {
         next();
     } 
     else {
-        res.redirect('/users/login')
+        res.redirect('/admin/login')
     }
 };
 

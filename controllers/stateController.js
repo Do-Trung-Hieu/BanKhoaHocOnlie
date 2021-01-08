@@ -15,15 +15,15 @@ controller.getState = (productId,userId)=>{
             .then(data=>resolve(data))
             .catch(error=>reject(new Error(error)));
     });
-    
+
 };
 
 
 controller.createState = (productchildId,userId)=>{
     return State.findOne({
-            where: {
-                productchildId,
-                userId
+        where: {
+            productchildId,
+            userId
             }
         })
         .then (data => {
@@ -38,10 +38,9 @@ controller.createState = (productchildId,userId)=>{
                         userId: userId
                     });
                 })
-                
+
             }
         })
-    
 };
 
 // controller.updateState = (productchildId,userId)=>{
