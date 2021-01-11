@@ -111,7 +111,6 @@ controller.getInfoDetail= (email) =>{
                 where: { 
                     email: email
                 },
-                attributes: ['email','password','fullname','imagepath']
             })
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
@@ -142,7 +141,6 @@ controller.insertUser = (email,password,hoten,imagepath) =>{
 };
 
 controller.updateUser = (email,hoten) =>{
-    console.log(email,hoten);
     return new Promise((resolve,reject)=>{
         User
             .update({
@@ -159,7 +157,6 @@ controller.updateUser = (email,hoten) =>{
 };
 
 controller.updateUserImage = (email,hoten,image) =>{
-    console.log(email,hoten);
     return new Promise((resolve,reject)=>{
         User
             .update({

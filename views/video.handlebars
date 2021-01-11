@@ -8,7 +8,7 @@
 							{{!-- <img class="img-fluid" src="{{imagepath" alt=""> --}}
                             
                             <video width="600" controls>
-                                <source src='{{ProductChild.clip}}' type='video/mp4'>
+                                <source src='{{clip}}' type='video/mp4'>
                             </video>
 						</div>
 					</div>
@@ -16,7 +16,9 @@
 				<div class="col-lg-5 offset-lg-1">
 					<div class="s_product_text">
 						<h3>Tên môn học: {{Product.name}}</h3>
-						<h3>Giảng viên: </h3>
+						<h3>Giảng viên: {{Product.Teacher.fullname}}</h3>
+						<h3>Tên Category: {{Product.Category.name}}</h3>
+						<h3>Tên Topic: {{Product.Topic.name}}</h3>
 					</div>
 				</div>
 			</div>

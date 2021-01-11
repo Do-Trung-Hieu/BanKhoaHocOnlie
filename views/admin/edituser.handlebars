@@ -1,5 +1,4 @@
-
-{{#each userss}}
+{{#with user}}
 <div class="content">
     <div class="container-fluid">
         <div class="row">
@@ -14,25 +13,7 @@
                                 <div class="col-md-4 pl-1">
                                     <div class="form-group">
                                         <label>Username</label>
-                                        <input type="text" disabled class="form-control" name="username" placeholder="Email" value="{{email}}">
-                                    </div>
-                                </div>
-                                {{!-- <div class="col-md-5 pr-1">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Password</label>
-                                        <input type="text" name="password" id="pass" class="form-control" placeholder="Password"
-                                            value="{{User.password">
-                                    </div>
-                                </div> --}}
-                                <div class="col-md-3 pr-1">
-                                    <div class="form-group">
-                                        <label>is admin</label><br>
-                                        <select class="custom-select" name="isadmin"
-                                            aria-label="Example select with button addon">
-                                            <option value="{{#if isadmin}} TRUE{{else}}FALSE {{/if}}">{{#if isadmin}}TRUE{{else}}FALSE{{/if}}</option>
-                                            <option value="{{#if isadmin}} FALSE{{else}}TRUE {{/if}}">{{#if isadmin}}FALSE{{else}}TRUE{{/if}}</option>
-                                        </select>
-                                        
+                                        <input type="text" size="40" disabled class="form-control" name="username" placeholder="Email" value="{{email}}" >
                                     </div>
                                 </div>
                             </div>
@@ -45,20 +26,7 @@
                                             value="{{fullname}}">
                                     </div>
                                 </div>
-                                <div class="col-md-3 pl-1">
-                                    <div class="form-group">
-                                        <label>hoàn thành</label>
-                                        <input type="text" class="form-control" disabled
-                                            placeholder="Số khoá học hoàn thành" value="{{sokhoahoc}} ">
-                                    </div>
-                                </div>
                             </div>
-                            {{!-- <div class="row">
-                                <div class="form-group">
-                                    <input type="file" name="image" class="input-group input-file" />
-                                </div>
-                            </div> --}}
-
                             <button type="submit" class="btn btn-info btn-fill pull-right">Update Profile</button>
                             <div class="clearfix"></div>
                         </form>
@@ -74,7 +42,7 @@
                     <div class="card-body">
                         <div class="author">
                             <a href="#">
-                                <img class="avatar border-gray" src="/{{User.imagepath}}" alt="...">
+                                <img class="avatar border-gray" src="{{imagepath}}" alt="...">
                                 <h5 class="title"></h5>
                             </a>
                             <p class="description">
@@ -104,4 +72,4 @@
 <script>
 
 </script>
-{{/each}}
+{{/with}}

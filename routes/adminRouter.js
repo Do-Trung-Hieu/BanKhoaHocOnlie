@@ -83,9 +83,7 @@ router.get("/", userlogin.isLoggend_Admin, (req, res,next) => {
     tk 
         .getTotalBestSeller()
         .then (data => {
-            console.log(data);
             res.locals.top = data;
-            //console.log(top.rows);
             res.render('admin/dashboard', { layout: "../admin/layouts/main.handlebars" })
         })
         .catch(error => next(error));
@@ -95,7 +93,6 @@ router.get("/user" , userlogin.isLoggend_Admin ,(req, res, next) => {
     use
         .getInfoAll()
         .then(data =>{
-            console.log(data);
             res.locals.user = data;
             res.render('admin/tableuser',{layout: "../admin/layouts/main.handlebars" })
         })
@@ -109,20 +106,18 @@ router.get("/user/edit/:email" , userlogin.isLoggend_Admin  ,(req, res, next) =>
     use
         .getInfoDetail(req.params.email)
         .then(data =>{
-            console.log(data);
-            res.locals.userss = data;
+            res.locals.user = data;
             res.render("admin/edituser", { layout: "../admin/layouts/main.handlebars" });
         })
         .catch(error => next(error));
 }); // ok
-router.post("/user", upload.single("image"), userlogin.isLoggend_Admin, async function (req, res,next) {
+router.post("/user",userlogin.isLoggend_Admin, upload.single("image"),  async function (req, res,next) {
     if (!req.file) {
         return res.send(
             `<script>confirm("Vui lòng thêm 1 hình ảnh"); history.back();</script>`
         );
     }
     filename = `${Date.now()}-${req.file.originalname}`;
-    console.log(filename);
     sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/users/${filename}`);
     const email = req.body.email;
     const password = req.body.password;
@@ -132,7 +127,6 @@ router.post("/user", upload.single("image"), userlogin.isLoggend_Admin, async fu
     ktrauser
         .getByEmail(email)
         .then(data=>{
-            console.log(data);
             if(data != null) {
                 return res.send(
                     `<script>confirm("Tài Khoản đã sử dụng"); history.back();</script>`
@@ -142,7 +136,6 @@ router.post("/user", upload.single("image"), userlogin.isLoggend_Admin, async fu
             return ins.insertUser(email,password,hoten,image);
         })
         .then(data =>{
-            console.log(data);
             res.redirect('/admin/user');
         })
         .catch(error => next(error));
@@ -198,7 +191,6 @@ router.post("/teacher",userlogin.isLoggend_Admin , upload.single("image"), async
         );
     }
     filename = `${Date.now()}-${req.file.originalname}`;
-    console.log(filename);
     sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/users/${filename}`);
     const image = "/img/users/" + filename;
     const email = req.body.email;
@@ -209,7 +201,6 @@ router.post("/teacher",userlogin.isLoggend_Admin , upload.single("image"), async
     ktrauser
         .getByEmail(email)
         .then(data=>{
-            console.log(data);
             if(data != null) {
                 return res.send(
                     `<script>confirm("Tài Khoản đã sử dụng"); history.back();</script>`
@@ -219,15 +210,12 @@ router.post("/teacher",userlogin.isLoggend_Admin , upload.single("image"), async
             return ins.insertTeacher(email,password,hoten,image,chuyenmon);
         })
         .then(data =>{
-            console.log(data);
             res.redirect('/admin/teacher');
         })
         .catch(error => next(error));
 })  // ok
-router.post("/teacher/edit/:email/update" , userlogin.isLoggend_Admin, upload.single("image"), async (req, res) => {
+router.post("/teacher/edit/:email/update" , userlogin.isLoggend_Admin, async (req, res) => {
     const hoten = req.body.hoten;
-    const chuyenmon = req.body.chuyenmon;
-    const gioithieu = req.body.gioithieu;
     let up = require('../controllers/teacherController');
     up
         .updateTeacher(req.params.email,hoten)
@@ -358,8 +346,7 @@ router.post("/themkhoahoc/addkhoahoc" ,userlogin.isLoggend_Admin, upload.single(
     const topicid = req.body.topicid;
     const teacherid = req.body.teacher;
     filename = `${Date.now()}-${req.file.originalname}`;
-    console.log(filename);
-    sharp(req.file.buffer).resize({width: 263,height: 280}).toFile(`./public/img/product/${filename}`);
+    sharp(req.file.buffer).resize({width: 800,height: 460}).toFile(`./public/img/product/${filename}`);
     const image = "/img/product/" + filename;
     let check = require('../controllers/adminController');
     check

@@ -21,7 +21,7 @@
             <div class="col-lg-12 course_col" style="padding: 0px 0px 0px 15px">
                 <div class="course">
                     <div class="card text-center card-product">
-                        <div class="course_image card-product__img"><img src="img/product/kd.jpg" alt="">
+                        <div class="course_image card-product__img"><img src="{{imagepath}}" alt="">
                         <ul class="card-product__imgOverlay">
                             <li><button onclick="location.href='/products/{{id}}'"><i class="ti-search"></i></button></li>
                             <li><button class="add-to-cart" data-id="{{id}}"><i class="ti-shopping-cart"></i></button></li>
@@ -41,14 +41,14 @@
                         <div class="course_footer_content d-flex flex-row align-items-center justify-content-start">
                             <div class="course_info">
                                 <i class="fa fa-graduation-cap" aria-hidden="true"></i>
-                                <span>10 Student</span>
+                                <span>{{dataValues.like_count}} Student</span>
                             </div>
                             <div class="course_info">
                                 <i class="fa fa-star" aria-hidden="true"></i>
-                                <span>5 Ratings</span>
+                                <span>{{overallreview}} Ratings</span>
                             </div>
                         </div>
-                        <div class="course_price ml-auto">${{price}} <b>$13</b></div>
+                        <div class="course_price ml-auto">${{price}} <b>${{promotion}}</b></div>
                     </div>
                 </div>
             </div>

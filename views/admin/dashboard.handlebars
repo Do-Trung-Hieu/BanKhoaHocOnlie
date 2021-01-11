@@ -5,28 +5,8 @@
     <div class="container-fluid">
 
         <div class="row">
-            <div class="col-md-6">
-                <div class="card ">
-                    <div class="card-header ">
-                        <h4 class="card-title">Thu thập trong năm</h4>
-                        <p class="card-category">All products including Taxes</p>
-                    </div>
-                    <div class="card-body ">
-                        <div id="chartActivity" class="ct-chart"></div>
-                    </div>
-                    <div class="card-footer ">
-                        <div class="legend">
-                            <i class="fa fa-circle text-info"></i> Tesla Model S
-
-                        </div>
-                        <hr>
-                        <div class="stats">
-                            <i class="fa fa-check"></i> Data information certified
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
+            
+            <div class="col-md-12">
                 <div class="card  card-tasks">
                     <div class="card-header ">
                         <h4 class="card-title">Top</h4>
@@ -35,16 +15,29 @@
                     <div class="card-body ">
                         <div class="table-full-width">
                             <table class="table">
+                                <thead>
+                                    <th></th>
+                                    <th>Category</th>
+                                    <th>Topic</th>
+                                    <th>Name of course</th>
+                                    <th>Number of students</th>
+                                    <th>Total proceeds</th>
+                                </thead>
                                 <tbody>
                                     {{#each top}}
                                     <tr>
-                                        <td>
+                                        <td width="7%">
                                             <label class="form-check-label"></label>
                                             <i class="fa fa-star" aria-hidden="true"></i>
                                         </td>
+                                        <td width="15%">{{Product.Category.name}}</td>
+                                        <td width="15%">{{Product.Topic.name}}</td>
                                         <td>{{Product.name}}</td>
-                                        <td class="td-actions text-right">
-                                            <p>{{total}}</p>
+                                        <td width= "15%"class="td-actions text-center">
+                                            <p>{{dataValues.count}}</p>
+                                        </td>
+                                        <td width="15%" class="td-actions text-center">
+                                            <p>{{dataValues.total}}</p>
                                         </td>
                                     </tr>
                                     {{/each}}

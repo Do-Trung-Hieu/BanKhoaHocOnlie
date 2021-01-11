@@ -23,7 +23,6 @@ controller.getByEmail = (email) =>{
         Teacher
             .findOne({
                 where: { email: email},
-                attributes: ['id','email','password','fullname','imagepath']
             })
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
@@ -44,11 +43,31 @@ controller.insertTeacher = (email,password,hoten,imagepath,chuyenmon) =>{
     })
 }
 
-controller.updateTeacher = (email,hoten) =>{
+controller.updateTeacher = (email,hoten,gioithieu) =>{
     return new Promise((resolve,reject)=>{
         Teacher
             .update({
                 fullname: hoten,
+                gioithieu: gioithieu,
+            },
+            {
+                where: {
+                    email:email
+                }
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+};
+
+
+controller.updateTeacherImage = (email,hoten,image,gioithieu) =>{
+    return new Promise((resolve,reject)=>{
+        Teacher
+            .update({
+                fullname: hoten,
+                imagepath: image,
+                gioithieu: gioithieu,
             },
             {
                 where: {
@@ -74,10 +93,23 @@ controller.deleteTeacher = (email) =>{
 controller.comparePassword = (password,hash) => {
     return bcryptjs.compareSync(password,hash);
 };
+controller.updatePassword = (teacher,newpassword) => {
+    var salt = bcryptjs.genSaltSync(10);
+    teacher.password = bcryptjs.hashSync(newpassword, salt);
+    return Teacher.update({
+            password: teacher.password
+        },
+        {
+            where:{
+                id: teacher.id
+            }
+        });
+};
 
 controller.getProductByIdTeach = (id) =>{
     return Product.findAll({
-        where: { teacherId: id }
+        where: { teacherId: id },
+        include: [{ model: models.Category}, {model: models.Topic}]
     })
 };
 //------------------- ÁP DỤNG CHO GIÁO VIÊN ------------------------------

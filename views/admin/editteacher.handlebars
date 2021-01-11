@@ -16,14 +16,6 @@
                                         <input type="text" disabled class="form-control" name="username" placeholder="Email" value="{{email}}">
                                     </div>
                                 </div>
-                                {{!-- <div class="col-md-6 px-1">
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        <input type="text" name="password" class="form-control" placeholder="Password"
-                                            value="{{password">
-                                    </div>
-                                </div> --}}
-
                             </div>
                             <div class="row">
                                 <div class="col-md-5 pr-1">
@@ -36,8 +28,8 @@
                                 <div class="col-md-3 pl-1">
                                     <div class="form-group">
                                         <label>Specialize</label>
-                                        <input type="text" class="form-control" disabled
-                                            placeholder="Chuyên môn" value="Chuyên môn">
+                                        <input type="text" name="chuyenmon" class="form-control" 
+                                            placeholder="Chuyên môn" value="{{chuyenmon}}">
                                     </div>
                                 </div>
                             </div>
@@ -45,17 +37,12 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>About Me</label>
-                                        <textarea rows="3" class="form-control"
+                                        <textarea rows="3" class="form-control" 
                                             placeholder="Giới thiệu"
-                                            name="gioithieu" ></textarea>
+                                            name="gioithieu" value="{{gioithieu}}"></textarea>
                                     </div>
                                 </div>
                             </div>
-                            {{!-- <div class="row">
-                                <div class="form-group">
-                                    <input type="file" name="image" class="input-group input-file" />
-                                </div>
-                            </div> --}}
                             <button type="submit" class="btn btn-info btn-fill pull-right">Update Profile</button>
                             <div class="clearfix"></div>
                         </form>
@@ -75,13 +62,9 @@
                                 <h5 class="title">{{ten}}</h5>
                             </a>
                             <p class="description">
-                                michael24
                             </p>
                         </div>
                         <p class="description text-center">
-                            "Lamborghini Mercy
-                            <br> Your chick she so thirsty
-                            <br> I'm in that two seat Lambo"
                         </p>
                     </div>
                     <hr>

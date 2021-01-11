@@ -13,7 +13,6 @@ router.post('/',userController.isLoggedIn,(req,res,next)=>{
     payController   
         .getPayByUser(req.session.user.id)
         .then(pay => {
-            console.log(pay);
             let flag = 0;
             for (let i = 0; i < pay.length ; i++){
                 if(req.session.cart.items[pay[i].productId] != undefined){

@@ -266,7 +266,6 @@ router.post('/upload-avatar',userController.isLoggedIn,upload.single('avatar'), 
     }
     else{
         filename = `${Date.now()}-${req.file.originalname}`;
-        console.log(filename);
         sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/users/${filename}`);
         userController.updateavatar(req.session.user.id,filename);
         res.render('upload-avatar',{
@@ -313,7 +312,6 @@ router.post('/edit',userController.isLoggedIn,upload.single('image'),(req,res,ne
     let hoten = req.body.hoten;
     if(req.file){
         filename = `${Date.now()}-${req.file.originalname}`;
-        console.log(filename);
         sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/users/${filename}`);
         let image = "/img/users/" + filename;
         let edit = require('../controllers/userController');

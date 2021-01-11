@@ -61,7 +61,6 @@ router.post('/login', (req,res,next) => {
     teacher
         .getByEmail(email)
         .then(teach => {
-            console.log(teach);
             if(teach){
                 if (teacher.comparePassword(password,teach.password)){
                     req.session.cookie.maxAge = keepLoggedIn ? 30*24*60*60*1000 : null;
@@ -119,6 +118,92 @@ router.get('/', userlogin.isLoggend_Teacher, (req,res,Next) => {
         .catch(error => Next(error));
 });
 
+router.get('/profile', userlogin.isLoggend_Teacher,  (req,res,Next) =>{
+    let one = require('../controllers/teacherController');
+    one
+        .getByEmail(req.session.teacher.email)
+        .then(data => {
+            res.locals.teacher = data;
+            res.render("admin/profileteacher", { layout: "../admin/layouts/teacherlayout.handlebars" });
+        })
+})
+
+router.get('/password', userlogin.isLoggend_Teacher, (req,res)=>{
+    res.render('admin/change-password-teacher',{ layout: "../admin/layouts/teacherlayout.handlebars" })
+})
+
+router.post('/profile/:email/update', userlogin.isLoggend_Teacher,upload.single('image'), (req,res)=>{
+    const hoten = req.body.hoten;
+    let gioithieu = req.body.gioithieu;
+    if(req.file){
+        filename = `${Date.now()}-${req.file.originalname}`;
+        sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/users/${filename}`);
+        let image = "/img/users/" + filename;
+        let edit = require('../controllers/teacherController');
+        edit
+            .updateTeacherImage(req.session.teacher.email,hoten,image,gioithieu)
+            .then(data =>{
+                res.send(
+                    `<script>confirm("Cập nhật thành công"); window.location="/teacher/profile";</script>`
+                )
+            })
+            .catch(error => next(error));
+    }
+    else{
+        let edit = require('../controllers/userController');
+        edit
+            .updateTeacher(req.session.teacher.email,hoten,gioithieu)
+            .then(data =>{
+                res.send(
+                    `<script>confirm("Cập nhật thành công"); window.location="/teacher/profile";</script>`
+                )
+            })
+            .catch(error => next(error));
+    }
+})
+
+router.post('/change-password', userlogin.isLoggend_Teacher, (req,res,next)=>{
+    let oldpassword = req.body.oldpassword;
+    let newpassword = req.body.newpassword;
+    let confirmnewpassword = req.body.confirmnewpassword;
+
+    if(oldpassword == '' || newpassword == '' || confirmnewpassword == ''){
+        return res.render('admin/change-password-teacher',{
+            layout: "../admin/layouts/teacherlayout.handlebars",
+            message: 'Please fill out the form !',   
+            type: 'alert-danger'
+        });
+    }
+
+    if(newpassword != confirmnewpassword){
+        return res.render('admin/change-password-teacher',{
+            layout: "../admin/layouts/teacherlayout.handlebars",
+            message: 'Confirm new password does not match !',   
+            type: 'alert-danger'
+        });
+    }
+
+    teacher.getByEmail(req.session.teacher.email)
+        .then(teacher11 => {
+            if (teacher.comparePassword(oldpassword,teacher11.password)){
+                teacher.updatePassword(teacher11,newpassword);
+                res.render('admin/change-password-teacher',{
+                    layout: "../admin/layouts/teacherlayout.handlebars",
+                    message: 'Change password successful !',
+                    type: 'alert-primary'
+                });
+            }
+            else{
+                res.render('admin/change-password-teacher',{
+                    layout: "../admin/layouts/teacherlayout.handlebars",
+                    message: 'Incorrect password!',
+                    type: 'alert-danger'
+                });
+            }
+        })
+        .catch(error => next (error));
+} )
+
 router.post('/addkhoahoc',userlogin.isLoggend_Teacher,upload.single('avatar'), (req,res,Next)=>{
     const name = req.body.name;
     const gia = parseFloat(req.body.gia);
@@ -126,16 +211,13 @@ router.post('/addkhoahoc',userlogin.isLoggend_Teacher,upload.single('avatar'), (
     const summary = req.body.chitiet;
     const categoryid = req.body.categoryid;
     const topicid = req.body.topicid;
-    //console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',teacherid);
     filename = `${Date.now()}-${req.file.originalname}`;
-    console.log(filename);
-    sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/product/${filename}`);
+    sharp(req.file.buffer).resize({width: 800,height: 460}).toFile(`./public/img/product/${filename}`);
     const image = "/img/product/" + filename;
     let cate = require('../controllers/teacherController');
     cate
         .checkCateById(topicid)
         .then(data =>{
-            console.log(data);
             if(data.categoryId == categoryid){
                 let namePro = require('../controllers/teacherController');
                 namePro
@@ -184,7 +266,9 @@ router.post('/addbaihoc',userlogin.isLoggend_Teacher,(req, res, Next) =>{
             add
                 .addCourseChild(noidung,video,courseid)
                 .then(data =>{
-                    res.send('them thanh cong');
+                    res.send(
+                        `<script>confirm("Thêm bài học thành công"); window.location="/teacher";</script>`
+                    )
                 })
                 .catch(error => Next(error));
           }

@@ -2,60 +2,162 @@ let controller = {};
 let models = require('../models');
 let Product = models.Product;
 let Pay = models.Pay;
+let Review = models.Review;
+let Topic = models.Topic;
 let ProductChild = models.Productchild;
 let Sequelize = require('sequelize');
+const { resolve } = require('path');
+const { createDeflate } = require('zlib');
 let Op = Sequelize.Op;
 
 
 controller.getTrendingProducts = ()=>{
-    return new Promise((resolve,reject)=>{
-        Product
-            .findAll({
-                order:[
-                    ['overallreview','DESC']
-                ],
-                limit:9,
-                include: [{model: models.Topic},{model: models.Teacher}],
-                attributes: ['id','name','price','imagepath']
-            })
-            .then(data=>resolve(data))
-            .catch(error=>reject(new Error(error)));
-    });
-};
+    // return new Promise((resolve,reject)=>{
+    //     Product
+    //         .findAll({
+    //             // group: ['Product.id','Product.name'],
+    //             group: ['Product.id','Product.name','Product.overallreview'],
 
-controller.getBestSeller = () => {
+    //             attributes: ['id','name','overallreview'],//'price','imagepath','description','overallreview','reviewCount'],
+    //             include: [//{model: models.Topic},{model: models.Teacher},
+    //                 {
+    //                     model: Review,
+    //                     group: 'Reviews.productId',
+    //                     attributes: 
+    //                         [[Sequelize.fn('COUNT',Sequelize.col('userId')),'like_count']],
+    //                 }
+    //             ],
+                
+    //             order:[
+    //                 ['overallreview','DESC']
+    //             ],
+    //             limit:9,
+                
+    //         })
+    //         .then(data=>resolve(data))
+    //         .catch(error=>reject(new Error(error)));
+    // });
+    // return new Promise((resolve,reject)=>{
+    //     Pay
+    //         .findAll({
+    //             group: ['Product.id','Product.name','productId'],//'Product.Topic.id','Product.Teacher.id'],
+    //             attributes: 
+    //                 [[Sequelize.fn('COUNT',Sequelize.col('productId')),'like_count']]
+    //             ,
+    //             include: [{
+    //                 model: Product,
+    //                 order:[
+    //                     ['overallreview','DESC']
+    //                 ],
+
+                    
+    //                 attributes: ['id','name','price','imagepath','overallreview'],
+    //                 // include: [{ model: models.Topic},{model: models.Teacher}],
+    //                 //right: true,
+    //             }],
+                
+    //             limit: 9,
+                
+    //         })
+    //         .then(data => resolve(data))
+    //         .catch(error => reject(new Error(error)));
+    // })
     return new Promise((resolve,reject)=>{
-        Pay
+        Review
             .findAll({
-                order: [
-                    [Sequelize.fn('COUNT',Sequelize.col('productId')),'DESC']
+                group: ['productId','Product.id','Product.name','Product.Topic.id','Product.Teacher.id'],
+                attributes: [[Sequelize.fn('COUNT',Sequelize.col('userId')),'like_count']],
+                include: [{ 
+                    model: models.Product,
+                    // order: [ 
+                    //     ['Product.overallreview','DESC']
+                    // ],
+                    attributes: ['id','name','price','promotion','imagepath','overallreview'],
+                    include: [{ model: models.Topic},{model: models.Teacher}],
+                    right: true,
+                }],
+                order: [ 
+                    [Product,'overallreview','DESC'],
+                    [Sequelize.fn('COUNT',Sequelize.col('userId')),'DESC']
                 ],
-                group: ['Product.id','Product.name','productId'],
-                attributes: 
-                    [[Sequelize.fn('COUNT',Sequelize.col('productId')),'like_count']]
-                ,
-                include: [{
-                    model: Product,
-                    attributes: ['id','name','price','imagepath'],
-                    include: []
-                }]
+                limit: 9,
             })
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
-    });
+    })
+};
+
+controller.getBestSeller = () => {
+    // return new Promise((resolve,reject)=>{
+    //     Pay
+    //         .findAll({
+    //             order: [
+    //                 [Sequelize.fn('COUNT',Sequelize.col('productId')),'DESC']
+    //             ],
+    //             group: ['Product.id','Product.name','productId'],
+    //             attributes: 
+    //                 [[Sequelize.fn('COUNT',Sequelize.col('productId')),'like_count']]
+    //             ,
+    //             include: [{
+    //                 model: Product,
+    //                 attributes: ['id','name','price','imagepath'],
+    //                 include: []
+    //             }]
+    //         })
+    //         .then(data => resolve(data))
+    //         .catch(error => reject(new Error(error)));
+    // });
+    return new Promise((resolve,reject)=>{
+        var d = new Date();
+        let options = {
+            group: ['Topic.id','Category.id','Products.id'],//'Products.Pays.id'],
+                attributes: 
+                    [[Sequelize.fn('COUNT',Sequelize.col('Topic.categoryId')),'like_count']]
+                ,
+                include: [
+                    {   model: models.Category,
+                        attributes: ['id','name','imagepath']},
+                    {   model: models.Product,
+                        where: {
+                            createdAt: {
+                                [Op.gte]: d.getTime()-604800000,
+                                [Op.lte]: d.getTime()
+                            }
+                        },
+                        attributes: ['name']
+                        //include: [{ model: models.Pay}]
+                    },
+                ],
+                order: [[Sequelize.fn('COUNT',Sequelize.col('Topic.categoryId')),'DESC']]
+        };
+        
+        Topic
+            .findAll(options)
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
 };
 
 controller.getNewest = () => {
-    return new Promise((resolve,reject)=> {
-        Product
+    return new Promise((resolve,reject)=>{
+        Review
             .findAll({
+                group: ['productId','Product.id','Product.name','Product.Topic.id','Product.Teacher.id'],
+                attributes: [[Sequelize.fn('COUNT',Sequelize.col('userId')),'like_count']],
+                include: [{ 
+                    model: models.Product,
+                    // order: [ 
+                    //     ['Product.overallreview','DESC']
+                    // ],
+                    attributes: ['id','name','price','promotion','imagepath','overallreview'],
+                    include: [{ model: models.Topic},{model: models.Teacher}],
+                    right: true,
+                }],
                 order: [ 
-                    ['createdAt' , 'DESC']
+                    [Product,'createdAt','DESC'],
+                    [Sequelize.fn('COUNT',Sequelize.col('userId')),'DESC']
                 ],
-                attributes: ['name','price','imagepath'],
-                include: [],
-                limit : 9,
-
+                limit: 9,
             })
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
@@ -71,7 +173,6 @@ controller.getAll = (query)=>{
                 {model: models.Topic},
                 {model: models.Teacher}
             ],
-            attributes: ['id','name','price','imagepath','categoryId'],
             where:{
                 price: {
                     [Op.gte]: query.min,
@@ -116,6 +217,61 @@ controller.getAll = (query)=>{
             .then(data=>resolve(data))
             .catch(error=>reject(new Error(error)));
     });
+    // return new Promise((resolve,reject)=>{
+    //     let options = {
+    //         group: ['productId','Product.id','Product.name','Product.Topic.id','Product.Teacher.id','Product.Category.id'],
+    //         attributes: [[Sequelize.fn('COUNT',Sequelize.col('userId')),'like_count']],
+    //         include: [{ 
+    //             model: models.Product,
+    //             attributes: ['id','name','price','promotion','imagepath','overallreview'],
+    //             include: [{ model: models.Topic},{model: models.Teacher},{ model: models.Category}],
+    //             where: {
+    //                 price: {
+    //                     [Op.gte]: query.min,
+    //                     [Op.lte]: query.max
+    //                 }
+    //             },
+    //             required: false,
+    //             right: true,
+    //         }],
+    //     };
+    //     if(query.category > 0){
+    //         options.include[0].where.categoryId = query.category;
+    //     }
+    //     if(query.search != ''){
+    //         options.include[0].where.name = {
+    //             [Op.iLike]: `%${query.search}%`
+    //         }
+    //     }
+    //     if(query.topic > 0){
+    //         options.include[0].where.topicId = query.topic;
+    //     }
+    //     if(query.limit > 0){
+    //         options.limit = query.limit;
+    //         // Lấy từ
+    //         options.offset = query.limit * (query.page - 1);
+    //     }
+    //     if(query.sort){
+    //         switch(query.sort){
+    //             case 'name':
+    //                 options.order = [[Product,'name','ASC']];
+    //                 break;
+    //             case 'price':
+    //                 options.order = [[Product,'price','ASC']];
+    //                 break;
+    //             case 'overallreview':
+    //                 options.order = [[Product,'overallreview','DESC']];
+    //                 break;
+    //             default:
+    //                 options.order = [[Product,'name','ASC']];
+    //                 break;
+    //         }
+    //     }
+    //     Review
+    //         .findAll(options) // {rows, count}
+    //         .then(data=>resolve(data))
+    //         .catch(error=>reject(new Error(error)));
+    // });
 };
 
 controller.getById = (id) =>{
@@ -187,7 +343,10 @@ controller.getDetailCourse = (id) =>{
 
 controller.getProbyId = (id) =>{
     return ProductChild.findOne({
-        include: {model: models.Product},
+        include: {
+            model: models.Product,
+            include: [{ model: models.Teacher}, {model: models.Topic} , {model: models.Category}],
+        },
         where: {id: id}
     })
 }

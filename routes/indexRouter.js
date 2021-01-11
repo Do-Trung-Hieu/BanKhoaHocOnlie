@@ -12,18 +12,6 @@ router.get('/',(req,res,next)=>{
         })
         .then(data=>{
             res.locals.trendingProducts = data;
-            //console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',data[2].id);
-            // var arr = [];
-            // for (let i = 0 ;i < data.length; i++){
-            //     let pay = require('../controllers/payController');
-            //     pay.countPay(data[i].id)
-            //     .then(temp => {
-            //        arr.push = temp ;
-            //     })
-            // }
-            
-            // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',arr);
-            // res.locals.counttrendingproduct = Object.assign({}, arr);
             let productControllerBestSeller = require('../controllers/productController');
             return productControllerBestSeller.getBestSeller();
         })

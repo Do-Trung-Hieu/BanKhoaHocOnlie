@@ -34,17 +34,19 @@ controller.getTotalBestSeller = () => {
         Pay
             .findAll({
                 order: [
-                    [Sequelize.fn('SUM',Sequelize.col('Product.price')),'DESC']
+                    [Sequelize.fn('SUM',Sequelize.col('Pay.userId')),'DESC']
                 ],
-                group: ['Product.id','Product.name','productId'],
-                attributes: 
-                    ['productId',[Sequelize.fn('SUM',Sequelize.col('Product.price')),'total']]
+                group: ['Product.id','Product.name','productId','Product.Category.id','Product.Topic.id'],
+                attributes: [
+                    [Sequelize.fn('SUM',Sequelize.col('Pay.price')),'total'], 
+                    [Sequelize.fn('SUM',Sequelize.col('Pay.userId')),'count']
+                ]
                 ,
                 include: [{
                     model: models.Product,
-                    attributes: ['id','name','price','imagepath'],
-                    include: []
-                }]
+                    include: [{ model: models.Category}, {model: models.Topic}]
+                }],
+                limit: 9,
             })
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
@@ -57,7 +59,8 @@ controller.getCategory = () =>{
 
 controller.getTopic = (query) =>{
     let options = {
-        include: [{ model: Category,
+        include: [{ 
+            model: Category,
             where: { 
             }
         }]
