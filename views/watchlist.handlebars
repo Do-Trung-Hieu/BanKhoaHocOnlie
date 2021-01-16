@@ -32,7 +32,10 @@
                                </td> 
                               <td>
                                     <li class="list-inline-item">
-                                        <button class="btn btn-danger btn-sm rounded-0 delete-from-watchlist" type="button" data-id = "{{Product.id}}" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                                        <button type="button" class="btn btn-info"><a href="/products/{{Product.id}}">Info</a></button>
+                                        {{!-- <button class="btn btn-primary btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Add"><a href="/products/{{Product.id}}" >Info</a></button> --}}
+                                        <button type="button" data-id = "{{Product.id}}" class="btn btn-danger delete-from-watchlist">Delete</button>
+                                        {{!-- <button class="btn btn-danger btn-sm rounded-0 delete-from-watchlist" type="button" data-id = "{{Product.id}}" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button> --}}
                                     </li>
                                   {{!-- <div class="product_count">
                                       <input type="text" name="qty" id="sst{{item.id}}" maxlength="12" value="1" title="Quantity:"
