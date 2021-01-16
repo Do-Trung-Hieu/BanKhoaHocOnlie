@@ -11,6 +11,7 @@ router.get('/',(req,res,next)=>{
             return productController.getTrendingProducts();
         })
         .then(data=>{
+            //console.log("                              aaaaâ",data);
             res.locals.trendingProducts = data;
             let productControllerBestSeller = require('../controllers/productController');
             return productControllerBestSeller.getBestSeller();

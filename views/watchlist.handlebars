@@ -1,0 +1,109 @@
+ {{>banner }}
+ <!--================Cart Area =================-->
+  <section class="cart_area">
+      <div class="container">
+          <div class="cart_inner" id="cart-body">
+              {{!-- {{#if watchlist}} --}}
+              <div class="table-responsive">
+                  <table class="table">
+                      <thead>
+                          <tr>
+                              <th scope="col">Product</th>
+                              <th scope="col">Price</th>
+                              {{!-- <th scope="col">Quantity</th> --}}
+                              {{!-- <th scope="col">Total</th> --}}
+                          </tr>
+                      </thead>
+                      <tbody>
+                          {{#each watchlists}}
+                          <tr id="item{{id}}">
+                              <td>
+                                  <div class="media">
+                                      <div class="d-flex">
+                                          {{!-- <img src="{{}}" alt=""> --}}
+                                      </div>
+                                      <div class="media-body">
+                                          <p>{{Product.name}}</p>
+                                      </div>
+                                  </div>
+                              </td>
+                              <td>
+                                  <h5>${{Product.price}}</h5>
+                               </td> 
+                              <td>
+                                    <li class="list-inline-item">
+                                        <button class="btn btn-danger btn-sm rounded-0 delete-from-watchlist" type="button" data-id = "{{Product.id}}" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                                    </li>
+                                  {{!-- <div class="product_count">
+                                      <input type="text" name="qty" id="sst{{item.id}}" maxlength="12" value="1" title="Quantity:"
+                                          class="input-text qty" readonly>
+                                      <button class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+                                      <button onclick="var result = document.getElementById('sst{{item.id}}'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 1 || (sst == 1) &amp;&amp; confirm('Do you really want to remove this item?') ) result.value--; updateCart({{item.id}},result.value); return false;"
+                                          class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+                                  </div> --}}
+                              </td>
+                              {{!-- <td>
+                                  <h5>${{Product.price}}</h5>
+                              </td> --}}
+                          </tr>
+                           {{/each}}
+                          {{!-- <tr class="bottom_button">
+                              <td>
+                                  <a class="button bg-danger text-white" onclick="clearCart()">Clear Cart</a>
+                              </td>
+                              <td>
+
+                              </td>
+                              <td>
+
+                              </td>
+                              <td>
+                                  <div class="cupon_text d-flex align-items-center">
+                                      <input type="text" placeholder="Coupon Code">
+                                      <a class="primary-btn" href="#">Apply</a>
+                                      <a class="button" href="#">Have a Coupon?</a>
+                                  </div>
+                              </td>
+                          </tr> --}}
+                          {{!-- <tr>
+                              <td>
+
+                              </td>
+                              <td>
+
+                              </td>
+                              <td>
+                                  <h5>Subtotal</h5>
+                              </td>
+                              <td>
+                                  <h5 id="totalPrice">${{totalPrice}}</h5>
+                              </td>
+                          </tr> --}}
+                          {{!-- <tr class="out_button_area">
+                              <td class="d-none-l">
+
+                              </td>
+                              <td class="">
+
+                              </td>
+                              <td>
+
+                              </td>
+                              <td>
+                                <form action="/pays" method="POST">
+                                    <div class="col-md-12 form-group">
+                                        <button type="submit" value="submit" class="button button-login w-100">Pay</button>
+                                    </div>
+                                </form>
+                            </td>
+                          </tr> --}}
+                      </tbody>
+                  </table>
+                  {{!-- {{else}}
+                  <div class ="alert alert-info text-center">Your cart is empty !</div>
+                  {{/if}} --}}
+              </div>
+          </div>
+      </div>
+  </section>
+  <!--================End Cart Area =================-->

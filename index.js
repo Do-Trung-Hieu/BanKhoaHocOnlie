@@ -75,6 +75,8 @@ app.use('/reviews',require('./routes/reviewRouter'));
 app.use('/users',require('./routes/userRouter'));
 app.use('/pays',require('./routes/payRouter'));
 app.use('/teacher', require('./routes/teacherRouter'));
+app.use('/watchlist', require('./routes/watchlistRouter'));
+
 
 app.get('/sync', (req,res) => {
     let models = require('./models');

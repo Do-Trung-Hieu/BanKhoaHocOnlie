@@ -1,5 +1,7 @@
 $(document).ready(() => {
     $('.add-to-cart').on('click',addToCart);
+    $('.add-to-watchlist').on('click',addToWatchList);
+    $('.delete-from-watchlist').on('click',deleteFromWatchList);
 });
 
 function addToCart(){
@@ -80,4 +82,47 @@ function clearCart(){
             }
         });
     }
+}
+
+function addToWatchList(){
+    var id = $(this).data('id');
+    var data = {};
+    data.productId = id;
+    data.userId = 2;
+    $.ajax({
+        url: '/watchlist',
+        type: 'POST',
+        data: JSON.stringify(data),
+		contentType: 'application/json',
+        success: function(data){
+            if(data.sc == 2){
+                confirm("Sản phẩm đã có trong danh sách yêu thích !");
+            }
+            else{
+                confirm("Thêm sản phẩm vào danh sách yêu thích thành công !");
+            }
+        }
+    })
+}
+
+function deleteFromWatchList(){
+    var id = $(this).data('id');
+    var data = {};
+    data.productId = id;
+    data.userId = 2;
+    $.ajax({
+        url: '/watchlist',
+        type: 'DELETE',
+        data: JSON.stringify(data),
+		contentType: 'application/json',
+        success: function(data){
+            if(data.sc == 2){
+                confirm("Xóa khóa học khỏi danh sách yêu thích thành công !");
+                window.location.href = '/watchlist';
+            }
+            else{
+                confirm("Xóa khỏi khóa học khỏi danh sách thất bại !");
+            }
+        }
+    })
 }

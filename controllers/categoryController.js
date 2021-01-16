@@ -22,7 +22,7 @@ controller.getAll = (query)=>{
         Category
             .findAll(options)
             .then(data=>resolve(data))
-            .catch(error=>reject(new Error(error)));
+            .catch(error=>reject(new Error(error)));    
     });
 };
 
