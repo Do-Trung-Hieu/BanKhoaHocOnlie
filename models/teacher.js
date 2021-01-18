@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     imagepath: DataTypes.TEXT,
     chuyenmon: DataTypes.TEXT,
     gioithieu: DataTypes.TEXT,
+    lockuser: DataTypes.BOOLEAN,
   }, {});
   Teacher.associate = function(models) {
     // associations can be defined here

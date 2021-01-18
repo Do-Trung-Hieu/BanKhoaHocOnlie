@@ -37,6 +37,7 @@ controller.insertTeacher = (email,password,hoten,imagepath,chuyenmon) =>{
                 fullname:hoten,
                 imagepath:imagepath,
                 chuyenmon: chuyenmon,
+                lockuser: false,
             })
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
@@ -60,7 +61,6 @@ controller.updateTeacher = (email,hoten,gioithieu) =>{
     })
 };
 
-
 controller.updateTeacherImage = (email,hoten,image,gioithieu) =>{
     return new Promise((resolve,reject)=>{
         Teacher
@@ -78,6 +78,38 @@ controller.updateTeacherImage = (email,hoten,image,gioithieu) =>{
             .catch(error => reject(new Error(error)));
     })
 };
+
+controller.updateTeacherLock = (email) =>{
+    return new Promise((resolve,reject)=>{
+        Teacher
+            .update({
+                lockuser: true,
+            },
+            {
+                where: {
+                    email:email
+                }
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+};
+
+controller.updateTeacherUnLock = (email) =>{
+    return new Promise((resolve,reject)=>{
+        Teacher
+            .update({
+                lockuser: false,
+            },
+            {
+                where: {
+                    email:email
+                }
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+}
 
 controller.deleteTeacher = (email) =>{
     return new Promise((resolve,reject)=>{

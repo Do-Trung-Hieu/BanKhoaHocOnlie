@@ -12,6 +12,9 @@ router.post('/',userController.isLoggedIn,(req,res,next) => {
     if(!isNaN(req.body.parentCommentId) && (req.body.parentCommentId != '')){
         comment.parentCommentId = req.body.parentCommentId;
     }
+    else{
+        res.redirect('/products/'+ comment.productId);
+    }
     controller
         .add(comment)
         .then(data => {

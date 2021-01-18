@@ -15,8 +15,9 @@ controller.getAll = (query)=>{
                     price: {
                         [Op.gte]: query.min,
                         [Op.lte]: query.max
-                    }
-                }
+                    },
+                },
+                require: false,
             }]
         };
         if(query.category> 0){

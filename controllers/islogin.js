@@ -4,7 +4,7 @@ controller.isLoggend_Admin = (req, res, next) => {
         next();
     } 
     else {
-        res.redirect('/admin/login')
+        res.redirect(`/admin/login?returnURL=${req.originalUrl}`)
     }
 };
 
@@ -13,7 +13,7 @@ controller.isLoggend_Teacher = (req,res, next )=>{
         next();
     }
     else{
-        res.redirect('/teacher/login');
+        res.redirect(`/teacher/login?returnURL=${req.originalUrl}`);
     }
 }
 module.exports = controller;

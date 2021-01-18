@@ -67,15 +67,20 @@ controller.getTrendingProducts = ()=>{
             .findAll({
                 group: ['productId','Product.id','Product.name','Product.Topic.id','Product.Teacher.id'],
                 attributes: [[Sequelize.fn('COUNT',Sequelize.col('userId')),'like_count']],
+                
                 include: [{ 
                     model: models.Product,
                     // order: [ 
                     //     ['Product.overallreview','DESC']
                     // ],
+                    //where : { lockcourse: false },
                     attributes: ['id','name','price','promotion','imagepath','overallreview'],
                     include: [{ model: models.Topic},{model: models.Teacher}],
+                    
+                    //required: false,
                     right: true,
                 }],
+                
                 order: [ 
                     [Product,'overallreview','DESC'],
                     [Sequelize.fn('COUNT',Sequelize.col('userId')),'DESC']
@@ -109,33 +114,65 @@ controller.getBestSeller = () => {
     // });
     return new Promise((resolve,reject)=>{
         var d = new Date();
-        let options = {
-            group: ['Topic.id','Category.id','Products.id'],//'Products.Pays.id'],
-                attributes: 
-                    [[Sequelize.fn('COUNT',Sequelize.col('Topic.categoryId')),'like_count']]
-                ,
-                include: [
-                    {   model: models.Category,
-                        attributes: ['id','name','imagepath']},
-                    {   model: models.Product,
-                        where: {
-                            createdAt: {
-                                [Op.gte]: d.getTime()-604800000,
-                                [Op.lte]: d.getTime()
-                            }
-                        },
-                        attributes: ['name']
-                        //include: [{ model: models.Pay}]
-                    },
-                ],
-                order: [[Sequelize.fn('COUNT',Sequelize.col('Topic.categoryId')),'DESC']]
-        };
+        //let options = ;
         
         Topic
-            .findAll(options)
+            .findAll({
+                group: ['Topic.id','Products.id','Products.topicId'],//'Products.Pays.id'],
+                attributes: 
+                [[Sequelize.fn('COUNT',Sequelize.col('Products.topicId')),'like_count']]
+            ,
+                    include: [
+                        {   model: models.Product,
+                            
+                            include: [{ model: models.Pay,
+                                where: {
+                                    createdAt: {
+                                        [Op.gte]: d.getTime()-604800000,
+                                        [Op.lte]: d.getTime()
+                                    }
+                                },
+                                attributes: [],
+                            }],
+                            right: true,
+                        },
+                        
+                    ],
+                    order: [[Sequelize.fn('COUNT',Sequelize.col('Products.topicId')),'DESC']],
+
+            })
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
     })
+    // return new Promise((resolve,reject)=>{
+    //     var d = new Date();
+    //     let options = {
+    //             group: ['Product.id','Product.topicId','Topic.id','Pays.id'],//'Products.Pays.id'],
+    //             attributes: 
+    //                 [[Sequelize.fn('COUNT',Sequelize.col('Product.topicId')),'like_count']]
+    //             ,
+    //             include: [
+    //                 {   model: models.Topic,
+    //                     //include: [{ model: models.Pay}]
+    //                 },
+    //                 { model: models.Pay,
+    //                     where: {
+    //                         createdAt: {
+    //                             [Op.gte]: d.getTime()-604800000,
+    //                             [Op.lte]: d.getTime()
+    //                         }
+    //                     },
+    //                     attributes: []
+    //                 }
+    //             ],
+    //             order: [[Sequelize.fn('COUNT',Sequelize.col('Product.topicId')),'DESC']]
+    //     };
+        
+    //     Product
+    //         .findAll(options)
+    //         .then(data => resolve(data))
+    //         .catch(error => reject(new Error(error)));
+    // })
 };
 
 controller.getNewest = () => {
@@ -174,6 +211,7 @@ controller.getAll = (query)=>{
                 {model: models.Teacher}
             ],
             where:{
+                lockcourse: false,
                 price: {
                     [Op.gte]: query.min,
                     [Op.lte]: query.max
@@ -329,6 +367,66 @@ controller.getById = (id) =>{
             })
             .catch(error => reject(new Error(error)));
     });
+    // return new Promise((resolve,reject)=>{
+    //     let product;
+    //     Product
+    //         .findOne({
+    //             where: { id : id},
+    //             attributes: ['id','name','price','description','summary','overallreview','reviewCount','imagepath'],
+    //             include: [
+    //                 {
+    //                 model: models.Topic,
+    //                 attributes: ['name'],
+    //                 include: [{ 
+    //                     model: models.Category,
+    //                     attributes: ['name']
+    //                     }]
+    //                 },
+    //                 {
+    //                     model: models.Teacher
+    //                 }
+    //             ]
+    //         })
+    //         .then(result => {
+    //             if(result.lockcourse == false){
+    //                 product = result;
+    //             }
+    //             else{
+    //                 product = null;
+    //                 resolve(product);
+    //             }
+    //             return models.Comment.findAll({
+    //                 where: {productId: id, parentCommentId:null},
+    //                 include: [
+    //                     {
+    //                         model: models.User
+    //                     },
+    //                     // Lấy thêm comment con
+    //                     {
+    //                         model:models.Comment,
+    //                         as:'SubComments',
+    //                         include:[{model:models.User}]
+    //                     }]
+    //             }); 
+    //         })
+    //         .then(comments => {
+    //             product.Comments = comments;
+    //             return models.Review.findAll({
+    //                 where:{productId:id},
+    //                 include:[{model: models.User}]
+    //             });
+    //         })
+    //         .then(reviews => {
+    //             product.Reviews = reviews;
+    //             let stars = [];
+    //             for(let i = 1; i<=5; i++){
+    //                 stars.push(reviews.filter(item => (item.rating==i)).length);
+    //             }
+    //             product.stars = stars;
+    //             resolve(product);   
+    //         })
+    //         .catch(error => reject(new Error(error)));
+    // });
 };
 
 controller.getDetailCourse = (id) =>{
@@ -349,5 +447,37 @@ controller.getProbyId = (id) =>{
         },
         where: {id: id}
     })
-}
+};
+
+controller.updateCourseLock = (id) =>{
+    return new Promise((resolve,reject) =>{
+        Product
+            .update({
+                lockcourse : true,
+            },
+            {
+                where: {
+                    id : id,
+                }
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+};
+
+controller.updateCourseUnLock = (id) =>{
+    return new Promise((resolve,reject) =>{
+        Product
+            .update({
+                lockcourse : false,
+            },
+            {
+                where: {
+                    id : id,
+                }
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+};
 module.exports = controller;

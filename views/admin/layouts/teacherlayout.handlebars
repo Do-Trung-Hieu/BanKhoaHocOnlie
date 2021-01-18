@@ -29,39 +29,55 @@
 
     <!-- (Optional) Latest compiled and minified JavaScript translation files -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
+    
+    <style>
+        .sidebar:after,
+        body>.navbar-collapse:after {
+            background: #c50303;
+            background: -moz-linear-gradient(top, #ee5f5f 0%, #f80101 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ee5f5f), color-stop(100%, #f80101));
+            background: -webkit-linear-gradient(top, #ee5f5f 0%, #f80101 100%);
+            background: -o-linear-gradient(top, #ee5f5f 0%, #f80101 100%);
+            background: -ms-linear-gradient(top, #ee5f5f 0%, #f80101 100%);
+            background: linear-gradient(to bottom, #ee5f5f 0%, #f80101 100%);
+            background-size: 150% 150%;
+            z-index: 3;
+            opacity: 1;
+}
+    </style>
 </head>
 
 <body>
     <div class="wrapper">
         <div class="sidebar" data-image="/assets/img/sidebar-5.jpg">
-    <div class="sidebar-wrapper">
-        <div class="logo">
-            <a href="/teacher" class="simple-text">
-                Trang Chủ
-            </a>
+            <div class="sidebar-wrapper">
+                <div class="logo">
+                    <a href="/teacher" class="simple-text">
+                        Trang Chủ
+                    </a>
+                </div>
+                <ul class="nav">
+                    <li>
+                        <a class="nav-link" href="/teacher">
+                            <i class="nc-icon nc-chart-pie-35"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="/teacher/profile">
+                            <i class="nc-icon nc-chart-pie-35"></i>
+                            <p>Profile</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="/teacher/password">
+                            <i class="nc-icon nc-chart-pie-35"></i>
+                            <p>Change Password</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <ul class="nav">
-            <li>
-                <a class="nav-link" href="/teacher">
-                    <i class="nc-icon nc-chart-pie-35"></i>
-                    <p>Dashboard</p>
-                </a>
-            </li>
-            <li>
-                <a class="nav-link" href="/teacher/profile">
-                    <i class="nc-icon nc-chart-pie-35"></i>
-                    <p>Profile</p>
-                </a>
-            </li>
-            <li>
-                <a class="nav-link" href="/teacher/password">
-                    <i class="nc-icon nc-chart-pie-35"></i>
-                    <p>Change Password</p>
-                </a>
-            </li>
-        </ul>
-    </div>
-</div>
 
         <div class="main-panel">
             {{> navbarteacher}}

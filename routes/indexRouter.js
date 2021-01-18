@@ -11,12 +11,13 @@ router.get('/',(req,res,next)=>{
             return productController.getTrendingProducts();
         })
         .then(data=>{
-            //console.log("                              aaaaâ",data);
+            console.log("                              aaaaâ",data);
             res.locals.trendingProducts = data;
             let productControllerBestSeller = require('../controllers/productController');
             return productControllerBestSeller.getBestSeller();
         })
         .then(data =>{
+            console.log(data);
             res.locals.bestSellers = data;
             let productControllerLatest = require('../controllers/productController');
             return productControllerLatest.getNewest();

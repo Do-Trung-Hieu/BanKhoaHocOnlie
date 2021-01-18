@@ -38,6 +38,7 @@ controller.createUser = (user) => {
     user.imagepath = "/img/users/none.jpg";
     user.isAdmin = false;
     user.active = false;
+    user.lockuser = false;
     return User.create(user);
 }
 
@@ -82,22 +83,9 @@ controller.getInfoAll = () => {
     return new Promise((resolve,reject)=>{
         User
             .findAll({
-                // group: ['userId','User.id'],
-                // attributes: [[Sequelize.fn('COUNT',Sequelize.col('userId')),'sokhoahoc']],
-                // include: [{
-                //     model: User,
-                //     where: { 
-                //         isAdmin: 'false'
-                //     },
-                //     attributes: ['email','password','fullname','imagepath'],
-                //     include: [],
-                //     required: false,
-                //     right: true
-                // }]
                 where: {
                     isAdmin: false
                 },
-                attributes: ['email','password','fullname','imagepath']
             })
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
@@ -134,7 +122,15 @@ controller.insertUser = (email,password,hoten,imagepath) =>{
     // password1 = bcryptjs.hashSync(password, salt);
     return new Promise((resolve,reject)=>{
         User
-            .create({ email: email,password:bcryptjs.hashSync(password, bcryptjs.genSaltSync(10)),fullname:hoten,imagepath:imagepath,isAdmin:false,active:true})
+            .create({ 
+                email: email,
+                password:bcryptjs.hashSync(password, bcryptjs.genSaltSync(10)),
+                fullname:hoten,
+                imagepath:imagepath,
+                isAdmin:false,
+                active:true,
+                lockuser: false
+            })
             .then(data => resolve(data))
             .catch(error => reject(new Error(error)));
     })
@@ -193,4 +189,36 @@ controller.getPayById = (id) => {
         where: { userId: id}
     })
 };
+
+controller.updateUserBlock = (email) =>{
+    return new Promise((resolve,reject)=>{
+        User
+            .update({
+                lockuser: true,
+            },
+            {
+                where: {
+                    email:email
+                }
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+}
+
+controller.updateUserUnBlock = (email) =>{
+    return new Promise((resolve,reject)=>{
+        User
+            .update({
+                lockuser: false,
+            },
+            {
+                where: {
+                    email:email
+                }
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(new Error(error)));
+    })
+}
 module.exports = controller;

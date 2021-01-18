@@ -9,7 +9,9 @@ module.exports = (sequelize, DataTypes) => {
     overallreview: DataTypes.DOUBLE,
     reviewCount: DataTypes.INTEGER,
     imagepath: DataTypes.TEXT,
-    imagedetail: DataTypes.TEXT
+    imagedetail: DataTypes.TEXT,
+    lockcourse: DataTypes.BOOLEAN,
+    
   }, {});
   Product.associate = function(models) {
     // associations can be defined here

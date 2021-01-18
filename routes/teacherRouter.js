@@ -62,22 +62,32 @@ router.post('/login', (req,res,next) => {
         .getByEmail(email)
         .then(teach => {
             if(teach){
-                if (teacher.comparePassword(password,teach.password)){
-                    req.session.cookie.maxAge = keepLoggedIn ? 30*24*60*60*1000 : null;
-                    req.session.teacher = teach;
-                    req.session.isTeacher = teach;
-                    if(req.session.returnURL){
-                        res.redirect(req.session.returnURL);
-                    } else{
-                        res.redirect('/teacher');
-                    }
-                    
-                } else{
-                    res.render('teacherLogin',{
-                        message: 'Incorrect password!',
-                        type: 'alert-danger'
+                if(teach.lockuser === true){
+                    res.render('teacherLogin', {
+                        message: "Your Account was locked",
+                        type: "aler-danger",
                     });
                 }
+                else{
+                    if (teacher.comparePassword(password,teach.password)){
+                        req.session.cookie.maxAge = keepLoggedIn ? 30*24*60*60*1000 : null;
+                        req.session.teacher = teach;
+                        req.session.isTeacher = teach;
+                        if(req.session.returnURL){
+                            res.redirect(req.session.returnURL);
+                        } else{
+                            res.redirect('/teacher');
+                        }
+                        
+                    } 
+                    else{
+                        res.render('teacherLogin',{
+                            message: 'Incorrect password!',
+                            type: 'alert-danger'
+                        });
+                    }
+                }
+                
             } 
             else{
                 res.render('teacherLogin',{
@@ -211,6 +221,9 @@ router.post('/addkhoahoc',userlogin.isLoggend_Teacher,upload.single('avatar'), (
     const summary = req.body.chitiet;
     const categoryid = req.body.categoryid;
     const topicid = req.body.topicid;
+    if(req.file == undefined){
+        return res.send('`<script>confirm("Vui lòng thêm 1 ảnh"); window.location="/teacher";</script>`');
+    }
     filename = `${Date.now()}-${req.file.originalname}`;
     sharp(req.file.buffer).resize({width: 800,height: 460}).toFile(`./public/img/product/${filename}`);
     const image = "/img/product/" + filename;

@@ -77,7 +77,8 @@ controller.getProduct = (query_cate,query_top) =>{
         include: [{ model: models.Category},
         { model: models.Teacher}],
         where: { 
-        }
+        },
+        order: [['id','ASC']],
     };
     if(query_top > 0 && query_cate > 0){
         options.where.topicId = query_top;
@@ -108,8 +109,8 @@ controller.CheckTopic = (name) =>{
     })
 }
 
-controller.insertTopic = (cateid, name) =>{
-    return Topic.create({ name: name, categoryId: cateid});
+controller.insertTopic = (cateid, name,image) =>{
+    return Topic.create({ name: name, categoryId: cateid, imagepath: image});
 }
 
 controller.CheckDelCat = (id) =>{
@@ -147,16 +148,20 @@ controller.getNamePro = (name) =>{
         where: { name: name }
     })
 }
-controller.insertProduct = (name,price,description,summary,image,categoryid,topicid,teacherid) =>{
+controller.insertProduct = (name,price,giakm,description,summary,image,categoryid,topicid,teacherid) =>{
     return Product.create({
         name: name,
         price: price,
+        promotion: giakm,
         description: description,
         summary: summary,
         imagepath: image,
         categoryId: categoryid,
         topicId: topicid,
-        teacherId: teacherid
+        teacherId: teacherid,
+        overallreview: 0,
+        reviewCount: 0,
+        lockcourse: false,
     })
 }
 module.exports = controller;

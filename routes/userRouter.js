@@ -59,20 +59,20 @@ router.post('/login',(req,res,next) => {
                         type: 'alert-danger'
                     });
                 }
+                else if (user.lockuser === true) {
+                    res.render('login', {
+                        message: "Your Account was locked",
+                        type: "aler-danger",
+                    });
+                }
                 else{
                     if (userController.comparePassword(password,user.password)){
                         req.session.cookie.maxAge = keepLoggedIn ? 30*24*60*60*1000 : null;
                         req.session.user = user;
-                        //req.session.isAdmin = user.isAdmin;
                         if(req.session.returnURL){
                             res.redirect(req.session.returnURL);
                         } else{
-                            // if(req.session.isAdmin){
-                            //     res.redirect('/admin');
-                            // }
-                            // else{
                                 res.redirect('/');
-                            // }
                         }
                         
                     } else{

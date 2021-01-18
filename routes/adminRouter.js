@@ -5,6 +5,7 @@ let sharp = require('sharp');
 let multer = require('multer');
 let userlogin = require('../controllers/islogin');
 let userController = require('../controllers/userController');
+const { updateUser } = require("../controllers/userController");
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -117,6 +118,7 @@ router.post("/user",userlogin.isLoggend_Admin, upload.single("image"),  async fu
             `<script>confirm("Vui lòng thêm 1 hình ảnh"); history.back();</script>`
         );
     }
+    
     filename = `${Date.now()}-${req.file.originalname}`;
     sharp(req.file.buffer).resize({width: 70,height: 71}).toFile(`./public/img/users/${filename}`);
     const email = req.body.email;
@@ -143,6 +145,8 @@ router.post("/user",userlogin.isLoggend_Admin, upload.single("image"),  async fu
 router.post("/user/edit/:email/updateuser", userlogin.isLoggend_Admin, async (req, res,next) => {
     const hoten = req.body.hoten;
     const isadmin = req.body.isadmin;
+    console.log("âaaaaaaaaaaaaaaaaaaaaâ",req.params.email);
+    console.log("âaaaaaaaaaaaaaaaaaaaaâ",hoten);
     let up = require('../controllers/userController');
     up
         .updateUser(req.params.email,hoten)
@@ -162,6 +166,25 @@ router.post("/user/delete/:email", userlogin.isLoggend_Admin, (req,res,Next) =>{
         )
         .catch(error => Next(error));
 }); // ok
+
+router.post("/user/:email/lock_user", userlogin.isLoggend_Admin, async (req, res, Next) => {
+    let lock = require('../controllers/userController')
+    lock
+        .updateUserBlock(req.params.email)
+        .then(data =>{
+            return res.redirect("/admin/user");
+        })
+        .catch(error => Next(error));
+});
+router.post("/user/:email/unlock_user", userlogin.isLoggend_Admin, async (req, res, Next) => {
+    let lock = require('../controllers/userController')
+    lock
+        .updateUserUnBlock(req.params.email)
+        .then(data =>{
+            return res.redirect("/admin/user");
+        })
+        .catch(error => Next(error));
+});
 //-----------------------------------------------------------------------------
 router.get("/teacher" , userlogin.isLoggend_Admin , async (req, res) => {
     let teach = require('../controllers/teacherController');
@@ -235,6 +258,25 @@ router.post("/teacher/delete/:email" , userlogin.isLoggend_Admin, (req,res,Next)
         )
         .catch(error => Next(error));
 }); // ok
+
+router.post("/teacher/:email/lock_user", userlogin.isLoggend_Admin, async (req, res, Next) => {
+    let lock = require('../controllers/teacherController')
+    lock
+        .updateTeacherLock(req.params.email)
+        .then(data =>{
+            return res.redirect("/admin/teacher");
+        })
+        .catch(error => Next(error));
+});
+router.post("/teacher/:email/unlock_user", userlogin.isLoggend_Admin, async (req, res, Next) => {
+    let lock = require('../controllers/teacherController')
+    lock
+        .updateTeacherUnLock(req.params.email)
+        .then(data =>{
+            return res.redirect("/admin/teacher");
+        })
+        .catch(error => Next(error));
+});
 //------------------------------------------------------------------------------
 router.get("/courses"  ,userlogin.isLoggend_Admin, async (req, res , Next) => {
     let topic_id;
@@ -283,13 +325,33 @@ router.get("/courses"  ,userlogin.isLoggend_Admin, async (req, res , Next) => {
         })
         .catch(error => Next(error));
 }); // ok
+
+router.post("/courses/update/lock_course/:id", userlogin.isLoggend_Admin, async (req, res , Next) =>{
+    let lockcour = require('../controllers/productController')
+    lockcour
+        .updateCourseLock(req.params.id)
+        .then(data =>{
+            return res.redirect("/admin/courses");
+        })
+        .catch(error => Next(error));
+});
+
+router.post("/courses/update/unlock_course/:id", userlogin.isLoggend_Admin, async (req, res , Next) =>{
+    let lock = require('../controllers/productController')
+    lock
+        .updateCourseUnLock(req.params.id)
+        .then(data =>{
+            return res.redirect("/admin/courses");
+        })
+        .catch(error => Next(error));
+});
 router.get("/themkhoahoc"  ,userlogin.isLoggend_Admin, async (req, res) => {
     res.render('admin/editkhoahoc', { layout: "../admin/layouts/main.hbs" })
 }); // ok 
 router.post("/themkhoahoc/addcategory" , userlogin.isLoggend_Admin,upload.single("avatar"), (req, res, Next) => {
 
     if(req.file == undefined){
-        return res.send('fail');
+        return res.send('`<script>confirm("Vui lòng thêm 1 ảnh"); window.location="/admin/courses";</script>`');
     }
 
     filename = `${Date.now()}-${req.file.originalname}`;
@@ -315,7 +377,14 @@ router.post("/themkhoahoc/addcategory" , userlogin.isLoggend_Admin,upload.single
         })
         .catch(error => Next(error));
 }); // ok
-router.post("/themkhoahoc/addtopic" ,userlogin.isLoggend_Admin, async (req, res, Next) => {
+router.post("/themkhoahoc/addtopic" ,userlogin.isLoggend_Admin,upload.single("image"), async (req, res, Next) => {
+    if(req.file == undefined){
+        return res.send('`<script>confirm("Vui lòng thêm 1 ảnh"); window.location="/admin/courses";</script>`');
+    }
+
+    filename = `${Date.now()}-${req.file.originalname}`;
+    sharp(req.file.buffer).resize({width: 633,height: 550}).toFile(`./public/img/category/${filename}`);
+    const image = "/img/category/" + filename;
     let check = require('../controllers/adminController');
     check
         .CheckTopic(req.body.name)
@@ -327,7 +396,7 @@ router.post("/themkhoahoc/addtopic" ,userlogin.isLoggend_Admin, async (req, res,
             }
             else{
                 let add = require('../controllers/adminController');
-                add.insertTopic(req.body.topic,req.body.name)
+                add.insertTopic(req.body.topic,req.body.name,image)
                     .then(data => {
                         res.redirect("/admin/courses");
                     })
@@ -340,16 +409,26 @@ router.post("/themkhoahoc/addtopic" ,userlogin.isLoggend_Admin, async (req, res,
 router.post("/themkhoahoc/addkhoahoc" ,userlogin.isLoggend_Admin, upload.single('avatar'), async (req, res, Next) => {
     const name = req.body.name;
     const gia = parseFloat(req.body.gia);
+    const giakm = parseFloat(req.body.giakm);
     const description = req.body.tongquan;
     const summary = req.body.chitiet;
     const categoryid = req.body.categoryid;
     const topicid = req.body.topicid;
     const teacherid = req.body.teacher;
+    if(req.file == undefined){
+        return res.send('`<script>confirm("Vui lòng thêm 1 ảnh"); window.location="/admin/courses";</script>`');
+    }
     filename = `${Date.now()}-${req.file.originalname}`;
     sharp(req.file.buffer).resize({width: 800,height: 460}).toFile(`./public/img/product/${filename}`);
     const image = "/img/product/" + filename;
     let check = require('../controllers/adminController');
-    check
+    if(gia > giakm){
+        res.send(
+            `<script>confirm("Giá không được lớn hơn giá khuyến mãi"); window.location="/admin/courses";</script>`
+        );
+    }
+    else{
+        check
         .getNamePro(name)
         .then(data =>{
             if(data){
@@ -360,13 +439,15 @@ router.post("/themkhoahoc/addkhoahoc" ,userlogin.isLoggend_Admin, upload.single(
             else{
                 let add = require('../controllers/adminController');
                 add
-                    .insertProduct(name,gia,description,summary,image,categoryid,topicid,teacherid)
+                    .insertProduct(name,gia,giakm,description,summary,image,categoryid,topicid,teacherid)
                     .then(data =>{
                         res.redirect("/admin/courses");
                     })
                     .catch(error => Next(error));
             }
         })
+    }
+    
 }); // ok
 
 router.post("/courses/delete/category/:id" ,userlogin.isLoggend_Admin, (req, res, Next) =>{

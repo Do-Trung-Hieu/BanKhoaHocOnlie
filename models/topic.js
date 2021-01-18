@@ -1,7 +1,8 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Topic = sequelize.define('Topic', {
-    name: DataTypes.TEXT
+    name: DataTypes.TEXT,
+    imagepath: DataTypes.TEXT,
   }, {});
   Topic.associate = function(models) {
     // associations can be defined here

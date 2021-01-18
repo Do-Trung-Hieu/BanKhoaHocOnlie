@@ -32,7 +32,7 @@
 				<div class="col-lg-6">
 					<div class="login_form_inner register_form_inner">
 						<h3>Create an account</h3>
-						<form class="row login_form" action="/users/register" id="register_form" method="POST">
+						<form name="RegisterForm" class="row login_form" action="/users/register" id="register_form" onsubmit="return validateForm()" method="POST">
 							{{#if message}}
 							<div class="col-md-12 form-group alert {{type}}">
 								<strong>{{message}}</strong>
@@ -66,3 +66,27 @@
 		</div>
 	</section>
 	<!--================End Login Box Area =================-->
+<script>
+	function validateForm(){
+		var x = document.forms["RegisterForm"]["fullname"].value;
+		var y = document.forms["RegisterForm"]["email"].value;
+		var z = document.forms["RegisterForm"]["password"].value;
+		var t = document.forms["RegisterForm"]["confirmPassword"].value;
+
+		if(x == "" || y == "" || z == "" || t == ""){
+			alert("Vui lòng điền đầy đủ thông tin !");
+			return false;
+		}
+		else if(z.length < 3){
+			alert("Mật khẩu không được ít hơn 3 ký tự !");
+			return false;
+		}
+		else if(z != t){
+			alert("Confirm Password không đúng !");
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+</script>

@@ -24,10 +24,11 @@
                                                 </div>
                                                 <div class="modal-body mx-3">
                                                     <div class="md-form mb-5">
-                                                        <input type="text" name="name" id="name"
-                                                            class="form-control validate">
                                                         <label data-error="wrong" data-success="right"
                                                             for="defaultForm-email">Tên Category</label>
+                                                        <input type="text" name="name" id="name"
+                                                            class="form-control validate">
+                                                        
                                                     </div>
                                                     <div class="form-group">
                                                         <input type="file" class="form-control" id="avatar" name="avatar" >	
@@ -110,8 +111,8 @@
                                         <form method="post" action="/admin/courses/delete/category/{{id}}">
                                                 <button type="submit" class="btn btn-outline-danger" title="Delete">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-</svg> 
+                                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                                    </svg> 
                                                 </button>
                                             </form>
                                     </td>
@@ -146,11 +147,13 @@
                                                 </div>
                                                 <div class="modal-body mx-3">
                                                     <div class="md-form mb-5">
-
-                                                        <input type="text" name="name" id="name"
-                                                            class="form-control validate">
                                                         <label data-error="wrong" data-success="right"
                                                             for="defaultForm-email">Tên Topic</label>
+                                                        <input type="text" name="name" id="name"
+                                                            class="form-control validate">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="file" class="form-control" id="image" name="image" >	
                                                     </div>
                                                     <div class="md-form md-5">
                                                         <div class="form-group">
@@ -197,7 +200,7 @@
                                         <div class="modal fade" id="addkh{{id}}" tabindex="-1" role="dialog"
                                             aria-labelledby="myModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
-                                                <form action="/admin/themkhoahoc/addkhoahoc" method="POST"
+                                                <form name="AddCourseForm" action="/admin/themkhoahoc/addkhoahoc" onsubmit ="return validateForm()" method="POST"
                                                     enctype="multipart/form-data">
                                                     <div class="modal-content">
                                                         <div class="modal-header text-center">
@@ -214,13 +217,19 @@
                                                             <div class="md-form md-5">
                                                                 <label data-error="wrong" data-success="right"
                                                                     for="orangeForm-name">Tên khoá học</label>
-                                                                <input type="text" name="name"
+                                                                <input type="text" id="name" name="name"
                                                                     class="form-control validate">
                                                             </div>
                                                             <div class="md-form md-5">
                                                                 <label data-error="wrong" data-success="right"
                                                                     for="orangeForm-email">GIÁ</label>
-                                                                <input type="text" name="gia"
+                                                                <input type="text" id="gia" name="gia"
+                                                                    class="form-control validate">
+                                                            </div>
+                                                            <div class="md-form md-5">
+                                                                <label data-error="wrong" data-success="right"
+                                                                    for="orangeForm-email">GIÁ KHUYẾN MÃI</label>
+                                                                <input type="text" id="giakm"name="giakm"
                                                                     class="form-control validate">
                                                             </div>
                                                             <div class="md-form md-5">
@@ -239,18 +248,18 @@
                                                             <div class="md-form md-5">
                                                                 <label data-error="wrong" data-success="right"
                                                                     for="orangeForm-email">CHI TIẾT</label>
-                                                                <input type="text" name="chitiet"
+                                                                <input type="text" id="chitiet" name="chitiet"
                                                                     class="form-control validate">
                                                             </div>
                                                             <div class="md-form md-5">
                                                                 <label data-error="wrong" data-success="right"
                                                                     for="orangeForm-email">TỔNG QUAN</label>
-                                                                <textarea name="tongquan"
+                                                                <textarea id="tongquan" name="tongquan"
                                                                     class="md-textarea form-control"
                                                                     rows="5"></textarea>
                                                             </div>
                                                             <div class="form-group">
-                                                                <input type="file" name="image"
+                                                                <input type="file" name="avatar"
                                                                     class="input-group input-file" />
                                                             </div>
                                                             <input type="hidden" id="topicid" name="topicid"
@@ -278,14 +287,13 @@
                                         <form method="post" action="/admin/courses/delete/topic/{{id}}">
                                                 <button type="submit" class="btn btn-outline-danger" title="Delete">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-</svg> 
+                                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                                    </svg> 
                                                 </button>
                                             </form>
                                     </td>
                                 </tr>
                                 {{/each}}
-                                {{!-- {{/each}} --}}
                             </tbody>
                         </table>
 
@@ -301,13 +309,15 @@
                     </div>
 
                     <div class="card-body table-full-width table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover table-striped">
                             <thead>
                                 <th></th>
                                 <th>ID</th>
                                 <th>Tên khoá học</th>
                                 <th>Giá</th>
                                 <th>Giáo Viên</th>
+                                <th>Đình chỉ</th>
+                                <th></th>
                                 <th></th>
                             </thead>
                             <tbody>
@@ -319,61 +329,32 @@
                                     <td class="admin_hiden">{{name}}</td>
                                     <td>{{price}}</td>
                                     <td>{{Teacher.fullname}}</td>
+                                    <td>{{lockcourse}}</td>
                                     <td>
-                                        {{!-- <div class="modal fade" id="addbh{{id" tabindex="-1" role="dialog"
-                                            aria-labelledby="myModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <form action="/admin/themkhoahoc/addbaihoc" method="POST">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header text-center">
-                                                            <h4 class="modal-title w-100 font-weight-bold">Thêm bài học
-                                                                vào
-                                                                {{ten
-                                                            </h4>
-
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body mx-3">
-                                                            <div class="md-form md-5">
-                                                                <label data-error="wrong" data-success="right"
-                                                                    for="orangeForm-name">Nội dung</label>
-                                                                <input type="text" name="nd"
-                                                                    class="form-control validate">
-                                                            </div>
-                                                            <div class="md-form md-5">
-                                                                <label data-error="wrong" data-success="right"
-                                                                    for="orangeForm-email">link</label>
-                                                                <input type="text" name="link"
-                                                                    class="form-control validate">
-                                                            </div>
-                                                            <input type="hidden" id="courseid" name="courseid"
-                                                                value="{{courseid">
-                                                        </div>
-                                                        <div class="modal-footer d-flex justify-content-center">
-                                                            <button type="submit"
-                                                                class="btn btn-deep-orange">THÊM</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-
-                                         <div class="text-center">
-                                             <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal"
-                                                data-target="#modalRegisterForm"></a>
-                                            <i class="fa fa-plus" data-toggle="modal" data-target="#addbhid"
-                                                aria-hidden="true"></i>
-                                        </div> --}}
                                         <form method="post" action="/admin/courses/delete/product/{{id}}">
                                                 <button type="submit" class="btn btn-outline-danger" title="Delete">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-</svg> 
+                                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                                    </svg> 
                                                 </button>
                                         </form>
+                                    </td>
+                                    <td>
+                                        {{#if lockcourse}}
+                                        <form method="post" action="/admin/courses/update/unlock_course/{{id}}"
+                                            enctype="multipart/form-data">
+                                            <button  class="btn btn-danger btn-simple btn-link" id="unlock" type="submit" rel="tooltip" title="Unlock" >
+                                                <a class="fa fa-lock"></a>
+                                            </button>
+                                        </form>
+                                        {{else}}
+                                        <form method="post" action="/admin/courses/update/lock_course/{{id}}"
+                                            enctype="multipart/form-data">
+                                            <button  class="btn btn-danger btn-simple btn-link" id="lock" type="submit" rel="tooltip" title="Lock" >
+                                                <a class="fa fa-unlock"></a>
+                                            </button>
+                                        </form>
+                                        {{/if}}
                                     </td>
                                 </tr>
                                 {{/each}}
@@ -386,3 +367,25 @@
         </div>
     </div>
 </div>
+
+
+<script>
+	function validateForm(){
+		var x = document.forms["AddCourseForm"]["name"].value;
+		var y = document.forms["AddCourseForm"]["gia"].value;
+		var z = document.forms["AddCourseForm"]["chitiet"].value;
+		var t = document.forms["AddCourseForm"]["tongquan"].value;
+
+		if(x == "" || y == "" || z == "" || t == ""){
+			alert("Vui lòng điền đầy đủ thông tin !");
+			return false;
+		}
+		else if(y < 100){
+			alert("Vui lòng ghi giá nhỏ hơn 100$ !");
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+</script>

@@ -63,6 +63,21 @@ router.get('/',(req,res,next)=>{
 })
 
 router.get('/:id',(req,res,next)=>{
+    if(req.session.user){
+        let pay = require('../controllers/payController');
+        pay.findPay(req.session.user.id,req.params.id)
+        .then(data => {
+            if(data){
+                res.locals.isPurchase = true;
+            }
+            else{
+                res.locals.isPurchase = false;
+            }
+        })
+    }
+    else{
+        res.locals.isPurchase = false;
+    }
     let productController = require('../controllers/productController');
     productController
         .getById(req.params.id)
@@ -81,6 +96,12 @@ router.get('/:id',(req,res,next)=>{
         })
         .then(data =>{
             res.locals.trendingProducts = data;
+            let productchild = require('../controllers/productController');
+            return productchild.getDetailCourse(req.params.id)
+        })
+        .then(data => {
+            
+            res.locals.List = data;
             res.render('single-product');
         })
         .catch(error => next(error));

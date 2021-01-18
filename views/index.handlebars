@@ -148,12 +148,12 @@
           <h2>Best <span class="section-intro__style">Seller</span></h2>
         </div>
         <div class="owl-carousel owl-theme hero-carousel">
-          {{#each categories}}
+          {{#each bestSellers}}
           <div class="hero-carousel__slide">
-            <img src="{{imagepath}}" alt="" class="img-fluid">
-            <a href="/products?catrgory={{id}}" class="hero-carousel__slideOverlay">
-              <p>Category</p>
-              <h3>{{name}}</h3>
+            <img src="{{Topic.imagepath}}" alt="" class="img-fluid">
+            <a href="/products?topic={{Topic.id}}" class="hero-carousel__slideOverlay">
+              <p>Lĩnh vực</p>
+              <h3>{{Topic.name}}</h3>
             </a>
           </div>
           {{/each}}
